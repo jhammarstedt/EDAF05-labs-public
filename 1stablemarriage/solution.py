@@ -67,15 +67,8 @@ import sys
 # 2 Clean all messy input and sort
 # 3 Convert the preference list of women to be inversed
 
-            
-    W= {1:{'pref':[2,1], #man 1 at index 1, man 2 at index 2
-           'pair':None
-           },
-        2:{'pref':[1,2], #man 2 at index 1
-           'pair':None}}
-    
-    M = [[1,1,2],[2,2,1]]
 #%%
+#Test case
 #Here's the code for now with a 4x4 preference list
 
 
@@ -103,17 +96,22 @@ M = [[1,3,4,2,1],
      [2,3,4,1,2],
      [3,1,4,2,3],
      [4,2,1,4,3]]
+
+#%%
 N= len(M)
-p=M.copy()
+
+mingle=M.copy() # the list which will represent men who have not found a stable match 
 
 
-#add a check to see who has proposed to who
+#The proposals list contains the index of which order on the 
+# preference list man i can propose to. So if proposals[0]=1 the man will propose to his 2nd choice
 proposals = [0 for i in range(0,int(N))]
 
 def get_top_woman(man):
     """
-    Function that takes in the man and his preference list, and also the
-    proposals list which contains the index of which woman currently can propose too
+    Function that takes in man i and his preferences. Then uses the proposals list to 
+    get the top woman on his list which he has not proposed to already.       
+    
     """
     global proposals #Since we want to modify the global list inside our function
     
@@ -127,30 +125,30 @@ def get_top_woman(man):
     #get the top available woman
     propose_to = preference_list[current_top_pick]
     
-    proposals[current_man]+=1 #Cross that position of his list
+    proposals[current_man]+=1 #'Cross' that position of his list
     
     return propose_to
     
    
 while len(p)!= 0:
 
-    m = p.pop(0)
+    m = mingle.pop(0)
     
     w_index = get_top_woman(m) #get the top woman in his list
     
     w = W[w_index]
     
-    if w['pair']==None:
+    if w['pair']==None: #if woman is free
         w['pair']=m  #pair woman up with man 
     
     #check if the position of the current man is worse than this man
     elif w['pref'][w['pair'][0]-1]> w['pref'][m[0]-1]:
-        p.append(w['pair']) #put the less prefered man back 
+        mingle.append(w['pair']) #put the less prefered man back 
         w['pair'] = m #create a new pair
     
     else:
         #print(m)
-        p.append(m) #add this man back to the p list
+        mingle.append(m) #add this man back to the p list
        
 #Produce output   
 for i in W.keys():
