@@ -61,34 +61,12 @@ output:
 """
 import sys
 #%%
-def later():
-    #Fix the input and sorting :
-        
-    def test():
-        
-        
-        inp_file = sys.argv[1]
-        with open(inp_file) as f: 
-            lines = f.read().strip().split('\n')
-            print(lines)
-        
-        N = int(lines[0])
-    
-    
-    def x():
-        inp_file = r"C:\Users\johan\Documents\GitHub\EDAF05-labs\1stablemarriage\data\sample\1.in"
-        m =[]
-        w=[]
-        with open(inp_file) as f:
-            lines = f.read().strip().split('\n')
-            #print(lines)
-        
-        N = lines.pop(0)
-        x = [] #empty list to separate all lines
-        for i in lines:
-            x.append(i.split())
-        #M = {1:[1,2],2:[2,1]}
-        #W = [[1,1,2],[2,2,1]]
+
+#Todo:
+# 1 mangage input from system arguments
+# 2 Clean all messy input and sort
+# 3 Convert the preference list of women to be inversed
+
             
     W= {1:{'pref':[2,1], #man 1 at index 1, man 2 at index 2
            'pair':None
