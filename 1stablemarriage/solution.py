@@ -60,6 +60,7 @@ output:
                 
 """
 import sys
+#%%
 def later():
     #Fix the input and sorting :
         
@@ -96,8 +97,9 @@ def later():
            'pair':None}}
     
     M = [[1,1,2],[2,2,1]]
-
+#%%
 #Here's the code for now with a 4x4 preference list
+
 N=4
 def create_W(l1,l2,l3,l4):
     W= {1:{'pref':l1, #man 1 at index 1, man 2 at index 2
@@ -171,6 +173,7 @@ while len(p)!= 0:
     else:
         #print(m)
         p.append(m) #add this man back to the p list
-        
-   
-
+       
+#Produce output   
+for i in W.keys():
+    print(W[i]['pair'][0])
