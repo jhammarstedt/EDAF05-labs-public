@@ -100,20 +100,20 @@ def later():
 #%%
 #Here's the code for now with a 4x4 preference list
 
-N=4
+
 def create_W(l1,l2,l3,l4):
-    W= {1:{'pref':l1, #man 1 at index 1, man 2 at index 2
+    W= {1:{'pref':l1, 
            'pair':None
            },
-        2:{'pref':l2, #man 2 at index 1
+        2:{'pref':l2,
            'pair':None},
         3:{'pref':l3,
            'pair':None},
         4:{'pref':l4,
            'pair':None}}
     return W
-        
-L1= [4,2,1,3]
+
+L1= [4,2,1,3] #list represents the order that they prefer, so man 1 is 4th here
 L2= [2,1,3,4]
 L3=[4,1,2,3]
 L4= [1,4,2,3]
@@ -125,7 +125,7 @@ M = [[1,3,4,2,1],
      [2,3,4,1,2],
      [3,1,4,2,3],
      [4,2,1,4,3]]
-
+N= len(M)
 p=M.copy()
 
 
