@@ -71,6 +71,60 @@ import sys
 #Test case
 #Here's the code for now with a 4x4 preference list
 
+def get_data(folder,name):
+    inp_file = fr"C:\Users\johan\Documents\GitHub\EDAF05-labs\1stablemarriage\data\{folder}\{name}"
+    with open(inp_file) as f:
+        lines = f.read().strip().split('\n')
+    
+    N = lines.pop(0)
+    x= []
+    for i in lines:
+        x.append(i.split())
+    
+    men = []
+    man_count =1 #To sort out all the males
+    reset = 0 #add a counter that will increment if our list is not sorted
+    
+    while man_count <= len(N)+1: #check the list until we have all males
+        if int(lines[reset][0]) == man_count:
+            print('Index of man: ',lines[reset][0])
+            print('man index matches with count')
+            print('Current lines',lines)
+            men.append(lines.pop(reset))
+            print('after pop: ',lines)
+            
+            
+            
+            man_count+=1
+            print('man count: ',man_count,'\n')
+            reset=0
+        else:
+            reset+=1 #if 
+            print('No match, reset at ', reset)
+            
+    women =lines #since we have removed all men from x
+    
+    #splitting the lists 
+    men = [i.split() for i in men] 
+    women = [i.split() for i in women]
+    
+    #making all elements to int
+    men = [list(map(int,i)) for i in men]
+    women = [list(map(int,i)) for i in women] 
+    
+    
+    
+    return men,women,N,lines
+    
+M,W,N,lines = get_data('sample','1.in')
+
+
+#TO do:
+# rewrite create_w so it can take in unspecified amount of lists
+# fix messy input
+
+#%%
+#TEST case   
 
 def create_W(l1,l2,l3,l4):
     W= {1:{'pref':l1, 
