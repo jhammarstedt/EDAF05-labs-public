@@ -78,6 +78,9 @@ def get_data(folder,name):
     men = []
     man_count =1 #To sort out all the males
     reset = 0 #add a counter that will increment if our list is not sorted
+    
+    #All prints in here are used for debugging, will be removed
+    
     while man_count <= int(N): #check the list until we have all males
         if int(lines[reset][0]) == man_count:
             #print('Index of man: ',lines[reset][0])
