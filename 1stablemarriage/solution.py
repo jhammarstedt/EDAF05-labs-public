@@ -69,7 +69,7 @@ import sys
 
 #%%
 def fix_messy(lists):
-    x=2
+    x=2 #fix here
 
 
 def get_data(folder,name):
@@ -77,19 +77,20 @@ def get_data(folder,name):
     with open(inp_file) as f:
         lines = f.read().strip().split('\n')
    
+    #take out N
     couples = lines.pop(0)  
-    #return int(N),lines
-    #get_data('')
-    lines = [i.split() for i in lines]
+    
+    #fix the data so we get separate inner lists consiting of ints
+    lines = [i.split() for i in lines] 
     lines = [list(map(int,i)) for i in lines]
-    #Sort output    
+    
+        
     men = []
     man_count =1 #To sort out all the males
     reset = 0 #add a counter that will increment if our list is not sorted
     
     #All prints in here are used for debugging, will be removed
     
-    #the error is that '10' is '1' '0' as string
     
     while man_count <= int(couples): #check the list until we have all males
         if int(lines[reset][0]) == man_count:
@@ -109,19 +110,8 @@ def get_data(folder,name):
         else:
             reset+=1 #if 
             #print('No match, reset at ', reset,'\n')
-    
-    
-    #print('broke out at: ',man_count)        
-    women =lines #since we have removed all men from x
-    #print(men)
-    #splitting the lists 
-    #men = [i.split() for i in men] 
-    #women = [i.split() for i in women]
-    
-    #making all elements to int
-    #men = [list(map(int,i)) for i in men]
-    #women = [list(map(int,i)) for i in women] 
-    
+               
+    women =lines 
     
     
     return men,women,couples,lines
