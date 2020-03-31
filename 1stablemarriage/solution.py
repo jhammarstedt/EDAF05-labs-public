@@ -68,32 +68,24 @@ import sys
 # 3 Convert the preference list of women to be inversed
 
 #%%
-#Test case
-#Here's the code for now with a 4x4 preference list
 
 def get_data(folder,name):
     inp_file = fr"C:\Users\johan\Documents\GitHub\EDAF05-labs\1stablemarriage\data\{folder}\{name}"
     with open(inp_file) as f:
         lines = f.read().strip().split('\n')
     
-    N = lines.pop(0)
-    x= []
-    for i in lines:
-        x.append(i.split())
-    
+    N = lines.pop(0)    
     men = []
     man_count =1 #To sort out all the males
     reset = 0 #add a counter that will increment if our list is not sorted
-    
-    while man_count <= len(N)+1: #check the list until we have all males
+    while man_count <= int(N): #check the list until we have all males
         if int(lines[reset][0]) == man_count:
             #print('Index of man: ',lines[reset][0])
             #print('man index matches with count')
             #print('Current lines',lines)
             men.append(lines.pop(reset))
+            #print('man is now: ',men)
             #print('after pop: ',lines)
-            
-            
             
             man_count+=1
             #print('man count: ',man_count,'\n')
@@ -101,9 +93,10 @@ def get_data(folder,name):
         else:
             reset+=1 #if 
             #print('No match, reset at ', reset)
-            
-    women =lines #since we have removed all men from x
     
+    #print('broke out at: ',man_count)        
+    women =lines #since we have removed all men from x
+    #print(men)
     #splitting the lists 
     men = [i.split() for i in men] 
     women = [i.split() for i in women]
@@ -116,7 +109,7 @@ def get_data(folder,name):
     
     return men,women,N,lines
     
-M,unsorted_women,N,lines = get_data('sample','2.in')
+M,unsorted_women,N,lines = get_data('secret','0testsmall.in')
 
 
 def create(list_of_women,N):
