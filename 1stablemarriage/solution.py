@@ -87,20 +87,20 @@ def get_data(folder,name):
     
     while man_count <= len(N)+1: #check the list until we have all males
         if int(lines[reset][0]) == man_count:
-            print('Index of man: ',lines[reset][0])
-            print('man index matches with count')
-            print('Current lines',lines)
+            #print('Index of man: ',lines[reset][0])
+            #print('man index matches with count')
+            #print('Current lines',lines)
             men.append(lines.pop(reset))
-            print('after pop: ',lines)
+            #print('after pop: ',lines)
             
             
             
             man_count+=1
-            print('man count: ',man_count,'\n')
+            #print('man count: ',man_count,'\n')
             reset=0
         else:
             reset+=1 #if 
-            print('No match, reset at ', reset)
+            #print('No match, reset at ', reset)
             
     women =lines #since we have removed all men from x
     
@@ -116,13 +116,18 @@ def get_data(folder,name):
     
     return men,women,N,lines
     
-M,W,N,lines = get_data('sample','1.in')
+M,unsorted_women,N,lines = get_data('sample','2.in')
 
 
 #TO do:
-# rewrite create_w so it can take in unspecified amount of lists
+# Inverse the women list
 # fix messy input
 
+def create(list_of_women,N):
+    Wom = {woman[0]: {'pref':woman[1:N+1],'pair':None} for woman in list_of_women}
+    return Wom
+    
+W = create(unsorted_women,int(N))
 #%%
 #TEST case   
 
