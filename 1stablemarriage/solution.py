@@ -119,42 +119,11 @@ def get_data(folder,name):
 M,unsorted_women,N,lines = get_data('sample','2.in')
 
 
-#TO do:
-# Inverse the women list
-# fix messy input
-
 def create(list_of_women,N):
     Wom = {woman[0]: {'pref':woman[1:N+1],'pair':None} for woman in list_of_women}
     return Wom
     
 W = create(unsorted_women,int(N))
-#%%
-#TEST case   
-
-def create_W(l1,l2,l3,l4):
-    W= {1:{'pref':l1, 
-           'pair':None
-           },
-        2:{'pref':l2,
-           'pair':None},
-        3:{'pref':l3,
-           'pair':None},
-        4:{'pref':l4,
-           'pair':None}}
-    return W
-
-L1= [4,2,1,3] #list represents the order that they prefer, so man 1 is 4th here
-L2= [2,1,3,4]
-L3=[4,1,2,3]
-L4= [1,4,2,3]
-
-W = create_W(L1,L2,L3,L4)
-
-
-M = [[1,3,4,2,1],
-     [2,3,4,1,2],
-     [3,1,4,2,3],
-     [4,2,1,4,3]]
 
 #%%
 N= len(M)
@@ -189,7 +158,7 @@ def get_top_woman(man):
     return propose_to
     
    
-while len(p)!= 0:
+while len(mingle)!= 0:
 
     m = mingle.pop(0)
     
@@ -212,3 +181,35 @@ while len(p)!= 0:
 #Produce output   
 for i in W.keys():
     print(W[i]['pair'][0])
+
+
+
+#%%
+#TEST case   
+
+def create_W(l1,l2,l3,l4):
+    W= {1:{'pref':l1, 
+           'pair':None
+           },
+        2:{'pref':l2,
+           'pair':None},
+        3:{'pref':l3,
+           'pair':None},
+        4:{'pref':l4,
+           'pair':None}}
+    return W
+
+L1= [4,2,1,3] #list represents the order that they prefer, so man 1 is 4th here
+L2= [2,1,3,4]
+L3=[4,1,2,3]
+L4= [1,4,2,3]
+
+W = create_W(L1,L2,L3,L4)
+
+
+M = [[1,3,4,2,1],
+     [2,3,4,1,2],
+     [3,1,4,2,3],
+     [4,2,1,4,3]]
+
+#%%
