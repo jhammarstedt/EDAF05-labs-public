@@ -189,8 +189,7 @@ for i in W.keys():
 
 def create_W(l1,l2,l3,l4):
     W= {1:{'pref':l1, 
-           'pair':None
-           },
+           'pair':None},
         2:{'pref':l2,
            'pair':None},
         3:{'pref':l3,
@@ -201,7 +200,7 @@ def create_W(l1,l2,l3,l4):
 
 L1= [4,2,1,3] #list represents the order that they prefer, so man 1 is 4th here
 L2= [2,1,3,4]
-L3=[4,1,2,3]
+L3= [4,1,2,3]
 L4= [1,4,2,3]
 
 W = create_W(L1,L2,L3,L4)
