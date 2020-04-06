@@ -8,7 +8,7 @@ class Vertex:
     def get_connections(self):
         """display node connections"""
         connections = [x.id for x in self.adjacent]
-        print(f'{self.id} is connected to {connections}')
+        print(self.id,' is connected to ', connections)
         return self.adjacent
 
     def get_id(self):

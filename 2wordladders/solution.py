@@ -53,7 +53,9 @@ def create_graph(elements):
 def BFS(start, goal, graph):
     start_node = graph.get_vertex(start)            # start node
     goal_node = graph.get_vertex(goal)              # goal node
-
+    
+    
+    
     graph.vert_dict[start].get_connections()        # ej del av algo 
 
     return "bfs results" 
