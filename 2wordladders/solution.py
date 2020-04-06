@@ -60,13 +60,39 @@ def create_graph():
     
         def get_vertices(self):
             return self.vert_dict.keys()
-    
-    #Testing to build some connections
+        
+#%%%
+   
+    def connect():
+      """This function will connect the words where the tail is present in the other node"""
+        
+      
+      #there is still a bug here so matches it twice, but will give you an ide
+        
+        
+        for current_node in list(g.get_vertices()): #O(n^2)
+            
+            print('current node ',current_node)
+            tail = current_node[len(current_node)-4:]
+            
+            
+            for potential_neighbour in set(list(g.get_vertices())).difference(set([current_node])) : #messy way to get all elements in list except the current one
+                print('checking for match with: ',potential_neighbour)
+                if set(tail) <= set(potential_neighbour): #if the letters of the tail are present in the neighbour, order does not matter
+                    print(f'We have a match! Setting an edge from {current_node} to {potential_neighbour} \n')
+                    g.add_edge(current_node,potential_neighbour)
+     
+
     g = Graph()
-    g.add_vertex('a')
-    g.add_vertex('b')
-    g.add_edge('a', 'b') 
-    g.vert_dict['a'].get_connections()
+    for word in words: #creating vertexes for all words
+        g.add_vertex(word)           
+    
+    connect() #connecting the matching ones
+    g.vert_dict['where'].get_connections() #test output
+        
+        
+    
+    
 #%%
 
 def BFS():
@@ -77,7 +103,8 @@ def print_results():
     print("results")
 
 def main():                                     
-    get_data()                    
+    get_data()
+    create_graph()                    
     BFS() 
     print_results()                   
 
