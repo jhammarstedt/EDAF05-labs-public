@@ -6,7 +6,7 @@ def get_data():
     raw_data = []                           
     for input in sys.stdin:
         raw_data.append(input.strip())              # import every line from system in
-
+    
     N = int(raw_data[0].split(" ")[0])              # extract N from the input data
     Q = int(raw_data[0].split(" ")[1])              # extract Q from the input data
    
@@ -51,7 +51,7 @@ def create_graph(elements):
         
     
 
-def BFS(start, goal, graph):
+def BFS2(start, goal, graph):
     start_node = graph.get_vertex(start)            # start node
     goal_node = graph.get_vertex(goal)              # goal node
     neighbours = start_node.get_connections()       # every neighbour of start node
@@ -61,22 +61,41 @@ def BFS(start, goal, graph):
 
     return BFSrecursive(start_node, goal_node, neighbours)
 
+
 def BFSrecursive(start_node, goal_node, nodes):
     if nodes:
         for node in nodes:
             if node == goal_node:
-                print("__--__")
-                print("start: ", node.get_id())
-                print("goal:", goal_node.get_id())
-
-                print("--__--")
                 return 1
             elif not node.is_visited():
                 node.set_visited()
                 return 1 + int(BFSrecursive(node, goal_node, node.get_connections()))
-
     return 200000
    
+
+def BFS(start, goal, graph):
+    start_node = graph.get_vertex(start)            # start node
+    goal_node = graph.get_vertex(goal)              # goal node
+
+#print('Finding path from ',start_node.id, 'to ', goal_node.id)
+    
+    start_node.check = True                         #set the first node to true
+    q = [start_node]
+    
+    while len(q) != 0:
+        v = q.pop(0)
+        neighbours = v.get_connections()                #Get all neighbours
+        for granne in neighbours:
+            if not granne.check:                        #if we havent checked it yet
+                granne.check=True
+                q.append(granne)
+                if granne == goal_node:
+                    print('Found path! Lenght: ',len(q))
+                    return len(q)
+    
+    return "Impossible" 
+  
+
 
 def print_results(results):
     for e in results:
@@ -93,6 +112,7 @@ def main():
     for query in queries:
         start = sort_letters(query[0])              # start node converted to head + sorted(tail)
         goal = sort_letters(query[1])               # goal node converted to head + sorted(tail)
+        print('Finding path from ',query[0],' to ',query[1])
         results.append(BFS(start, goal, graph))     # BFS for every query in queries
 
     print_results(results)                          # print results 

@@ -11,7 +11,7 @@ class Vertex:
 
     def print_connections(self):
         connections = [x.id for x in self.adjacent]
-        print(f'{self.id} is connected to {connections}')
+        print(self.id,' is connected to ', connections)
 
     def get_id(self):
         return self.id
@@ -53,4 +53,5 @@ class Graph:
 
     def get_vertices(self):
         return self.vert_dict.keys()
+    
     
