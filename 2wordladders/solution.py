@@ -53,37 +53,32 @@ def create_graph(elements):
 def BFS(start, goal, graph):
     start_node = graph.get_vertex(start)            # start node
     goal_node = graph.get_vertex(goal)              # goal node
+    #print('Finding path from ',start_node.id, 'to ', goal_node.id)
     
-    L=[[start_node]]
     start_node.check = True                         #set the first node to true
+    q = [start_node]
     
-    i =0                                            #layer counter
-    flag = False
-    while (len(L[i]) != 0) or flag:         
-        L.append([])
-        for node in L[i]:
-            neigh = node.get_connections()
-            for inner_neigh in neigh:
-                if inner_neigh.check ==False:       #if it's not discovered
-                    inner_neigh.check=True          #set it to be discovered
-                    L[i+1].append(inner_neigh)
-                    if inner_neigh ==goal_node:     #
-                        flag = True
-        i +=1                                       #Move down one layer
     
-    print('stop here ',len(L))
-    for outer in L: 
-       for nodes in outer: #since they're inner lists
-           nodes.check=False #reseting all visits to False
     
+    while len(q) != 0:
+        v = q.pop(0)
+        neighbours = v.get_connections()                #Get all neighbours
+        for granne in neighbours:
+            if not granne.check:                        #if we havent checked it yet
+                granne.check=True
+                q.append(granne)
+                if granne == goal_node:
+                    print('Found path! Lenght: ',len(q))
+                    return len(q)
         
+   
         
     
     
     #graph.vert_dict[start].get_connections()        # ej del av algo 
     
     
-    return "bfs results" 
+    return "Impossible" 
 
 
 def print_results(results):
@@ -101,6 +96,7 @@ def main():
     for query in queries:
         start = sort_letters(query[0])              # start node converted to head + sorted(tail)
         goal = sort_letters(query[1])               # goal node converted to head + sorted(tail)
+        print('Finding path from ',query[0],' to ',query[1])
         results.append(BFS(start, goal, graph))     # BFS for every query in queries
 
     print_results(results)                          # print results 

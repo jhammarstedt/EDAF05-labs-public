@@ -5,7 +5,7 @@ class Vertex:
         self.id = node
         self.adjacent = []
         self.check = False #to check in the bfs
-    
+        #self.pred = None
     def get_connections(self):
         """display node connections"""
         connections = [x.id for x in self.adjacent]
