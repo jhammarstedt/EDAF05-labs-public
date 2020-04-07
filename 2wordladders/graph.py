@@ -4,6 +4,7 @@ class Vertex:
         dict to store it's neighbours"""
         self.id = node
         self.adjacent = []
+        self.check = False #to check in the bfs
     
     def get_connections(self):
         """display node connections"""
@@ -46,4 +47,5 @@ class Graph:
 
     def get_vertices(self):
         return self.vert_dict.keys()
+    
     

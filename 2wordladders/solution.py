@@ -6,7 +6,7 @@ def get_data():
     raw_data = []                           
     for input in sys.stdin:
         raw_data.append(input.strip())              # import every line from system in
-
+    
     N = int(raw_data[0].split(" ")[0])              # extract N from the input data
     Q = int(raw_data[0].split(" ")[1])              # extract Q from the input data
    
@@ -54,10 +54,35 @@ def BFS(start, goal, graph):
     start_node = graph.get_vertex(start)            # start node
     goal_node = graph.get_vertex(goal)              # goal node
     
+    L=[[start_node]]
+    start_node.check = True                         #set the first node to true
+    
+    i =0                                            #layer counter
+    flag = False
+    while (len(L[i]) != 0) or flag:         
+        L.append([])
+        for node in L[i]:
+            neigh = node.get_connections()
+            for inner_neigh in neigh:
+                if inner_neigh.check ==False:       #if it's not discovered
+                    inner_neigh.check=True          #set it to be discovered
+                    L[i+1].append(inner_neigh)
+                    if inner_neigh ==goal_node:     #
+                        flag = True
+        i +=1                                       #Move down one layer
+    
+    print('stop here ',len(L))
+    for outer in L: 
+       for nodes in outer: #since they're inner lists
+           nodes.check=False #reseting all visits to False
+    
+        
+        
     
     
-    graph.vert_dict[start].get_connections()        # ej del av algo 
-
+    #graph.vert_dict[start].get_connections()        # ej del av algo 
+    
+    
     return "bfs results" 
 
 
