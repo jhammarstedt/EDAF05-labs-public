@@ -68,7 +68,7 @@ def BFS(start, goal, graph):
                 granne.check=True
                 q.append(granne)
                 if granne == goal_node:
-                    print('Found path! Lenght: ',len(q))
+                    print('Found path! Lenght: ',len(q))                    
                     return len(q)
         
    
