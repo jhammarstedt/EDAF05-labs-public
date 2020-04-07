@@ -39,8 +39,9 @@ def create_graph(elements):
 
     for word in elements:
         graph.add_vertex(word)                      # create vertices for every word
-        tail = word[1:]                             # the tail (last 4 letters) of the word
 
+    for word in elements:
+        tail = word[1:]                             # the tail (last 4 letters) of the word
         for neighbour in elements:
             if set(tail) <= set(neighbour):         # if tail is a subset of neighbour...
                 if word != neighbour:               # ... but not the same word as ...
@@ -53,11 +54,29 @@ def create_graph(elements):
 def BFS(start, goal, graph):
     start_node = graph.get_vertex(start)            # start node
     goal_node = graph.get_vertex(goal)              # goal node
+    neighbours = start_node.get_connections()       # every neighbour of start node
 
-    graph.vert_dict[start].get_connections()        # ej del av algo 
+    if start_node == goal_node:
+        return 0
 
-    return "bfs results" 
+    return BFSrecursive(start_node, goal_node, neighbours)
 
+def BFSrecursive(start_node, goal_node, nodes):
+    if nodes:
+        for node in nodes:
+            if node == goal_node:
+                print("__--__")
+                print("start: ", node.get_id())
+                print("goal:", goal_node.get_id())
+
+                print("--__--")
+                return 1
+            elif not node.is_visited():
+                node.set_visited()
+                return 1 + int(BFSrecursive(node, goal_node, node.get_connections()))
+
+    return 200000
+   
 
 def print_results(results):
     for e in results:

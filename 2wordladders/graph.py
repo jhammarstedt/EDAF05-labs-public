@@ -4,12 +4,14 @@ class Vertex:
         dict to store it's neighbours"""
         self.id = node
         self.adjacent = []
-    
+        self.visited = False
+
     def get_connections(self):
-        """display node connections"""
+        return self.adjacent
+
+    def print_connections(self):
         connections = [x.id for x in self.adjacent]
         print(f'{self.id} is connected to {connections}')
-        return self.adjacent
 
     def get_id(self):
         return self.id
@@ -17,6 +19,11 @@ class Vertex:
     def add_neighbor(self, neighbor):
         self.adjacent.append(neighbor)
         
+    def is_visited(self):
+        return self.visited
+
+    def set_visited(self):
+        self.visited = True
 
 class Graph:
     def __init__(self):
