@@ -72,27 +72,40 @@ def BFSrecursive(start_node, goal_node, nodes):
                 return 1 + int(BFSrecursive(node, goal_node, node.get_connections()))
     return 200000
    
-
+def reset_visitors(visitors):
+    for node in visitors:
+        node.remove_visited()
+    
+    
 def BFS(start, goal, graph):
     start_node = graph.get_vertex(start)            # start node
     goal_node = graph.get_vertex(goal)              # goal node
-
-#print('Finding path from ',start_node.id, 'to ', goal_node.id)
+    if start_node == goal_node:
+        print('Same')
+        return 0
+    #print('Finding path from ',start_node.id, 'to ', goal_node.id)
     
-    start_node.check = True                         #set the first node to true
+    start_node.visited = True                         #set the first node to true
     q = [start_node]
-    
+    visited =[start_node]
+    layer_count= 1
     while len(q) != 0:
         v = q.pop(0)
+        v.print_connections()
         neighbours = v.get_connections()                #Get all neighbours
         for granne in neighbours:
-            if not granne.check:                        #if we havent checked it yet
-                granne.check=True
+            if not granne.is_visited():                        #if we havent checked it yet
+                granne.set_visited()               
+                visited.append(granne)                          
                 q.append(granne)
+                
                 if granne == goal_node:
-                    print('Found path! Lenght: ',len(q))                    
-                    return len(q)
+                    print('Found path! Lenght: ',layer_count)    
+                    reset_visitors(visited)             #reset the checks so that all nodes are unvisited                                 
+                    return layer_count
     
+        layer_count+=1
+    reset_visitors(visited)                             #if it was impossible to find a path we still want to reset
     return "Impossible" 
   
 

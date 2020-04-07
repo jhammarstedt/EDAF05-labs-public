@@ -24,6 +24,9 @@ class Vertex:
 
     def set_visited(self):
         self.visited = True
+    
+    def remove_visited(self):
+        self.visited = False
 
 class Graph:
     def __init__(self):
