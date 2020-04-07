@@ -83,7 +83,6 @@ def BFS(start, goal, graph):
     if start_node == goal_node:
         print('Same')
         return 0
-    #print('Finding path from ',start_node.id, 'to ', goal_node.id)
     
     start_node.visited = True                         #set the first node to true
     q = [start_node]
