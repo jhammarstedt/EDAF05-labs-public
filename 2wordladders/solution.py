@@ -126,9 +126,10 @@ def BFS(start, goal, graph):
     
     start_node.set_visited(token)                         #set the first node to true
     q = [start_node]
-    visited =[start_node]
+    #xvisited =[start_node]
     layer_count= 1
-
+    level = {}
+    level[start_node] = 0
     while q:
 
         v = q.pop(0)
@@ -139,12 +140,15 @@ def BFS(start, goal, graph):
                 n.set_visited(token)               
                 #visited.append(n)                          
                 q.append(n)
-                
+                level[n] = level[v] +1
+                #n.add_pred(v)
                 if n == goal_node:
     #                print('Found path! Lenght: ',layer_count)    
                     #reset_visitors(visited)             #reset the checks so that all nodes are unvisited                                 
-                    return layer_count
-    
+                    #return
+                    return level[n]
+
+
         layer_count += 1
     #reset_visitors(visited)                             #if it was impossible to find a path we still want to reset
     return "Impossible" 
@@ -162,7 +166,7 @@ def main():
     graph = create_graph(elements_set)              # create a graph
     #graph = create_graph(elements)
 
-    graph.print_graph()
+    #graph.print_graph()
 
     results = []
     for query in queries:

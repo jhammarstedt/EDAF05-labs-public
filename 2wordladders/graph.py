@@ -5,6 +5,7 @@ class Vertex:
         self.id = node
         self.adjacent = []
         self.token = -1
+        self.pred = []
 
     def get_connections(self):
         return self.adjacent
@@ -27,6 +28,15 @@ class Vertex:
     
     def remove_visited(self):
         self.token = -1
+
+    def add_pred(self, node):
+        self.pred.append(node)
+
+    def get_level(self):
+        return len(self.pred)
+
+    def clear_pred(self):
+        self.pred = []
 
 class Graph:
     def __init__(self):
