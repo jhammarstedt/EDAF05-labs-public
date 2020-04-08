@@ -47,7 +47,7 @@ def compare_strings(tail, unsorted_string):
     string = sorted(unsorted_string)
     index = 0
     diff = 0
-    while index + diff < len (tail):
+    while index < len (tail):
         if tail[index] != string[index + diff]:
             diff += 1
         else:
@@ -115,15 +115,19 @@ def reset_visitors(visitors):
 token = 0
     
 def BFS(start, goal, graph):
-    start_node = graph.get_vertex(start)            # start node
-    goal_node = graph.get_vertex(goal)              # goal node
     
     global token
     token = token + 1
 
-    if start_node == goal_node:                     # early out, if start = goal
+    if start == goal:                     # early out, if start = goal
         return 0
-    
+   
+    start_node = graph.get_vertex(sort_letters(start))            # start node
+    goal_node = graph.get_vertex(sort_letters(goal))              # goal node
+
+    if start_node == goal_node:
+        return 1
+
     start_node.set_visited(token)                         #set the first node to true
     q = [start_node]
     #xvisited =[start_node]
@@ -170,8 +174,8 @@ def main():
 
     results = []
     for query in queries:
-        start = sort_letters(query[0])              # start node converted to head + sorted(tail)
-        goal = sort_letters(query[1])               # goal node converted to head + sorted(tail)
+        start = query[0]              # start node converted to head + sorted(tail)
+        goal = query[1]               # goal node converted to head + sorted(tail)
         #start = query[0]
         #goal = query[1]
         #print('Finding path from ',query[0],' to ',query[1])
