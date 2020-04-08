@@ -1,24 +1,24 @@
 import sys
+import collections
 from graph import Vertex, Graph
-
 
 def get_data():
     """ Returns the formatted data fetched from stdin. """
     raw_data = []                           
     for input in sys.stdin:
-        raw_data.append(input.strip())              # import every line from system in
+        raw_data.append(input.strip())                  # import every line from system in
     
-    N = int(raw_data[0].split(" ")[0])              # extract N from the input data
-    Q = int(raw_data[0].split(" ")[1])              # extract Q from the input data
+    N = int(raw_data[0].split(" ")[0])                  # extract N from the input data
+    Q = int(raw_data[0].split(" ")[1])                  # extract Q from the input data
    
-    elements = raw_data[1:N+1]                      # extract the graph elements from the input data
-    query_list = raw_data[N+1:]                     # extract the queries from the input data
+    elements = raw_data[1:N+1]                          # extract the graph elements from the input data
+    query_list = raw_data[N+1:]                         # extract the queries from the input data
     
     queries = []
     for query in query_list:                    
-        queries.append(query.split(" "))            # split query string into array
+        queries.append(query.split(" "))                # split query string into array
 
-    return elements, queries                        # return graph elements and queries
+    return elements, queries                            # return graph elements and queries
 
 
 def sort_tail(word):
@@ -35,21 +35,23 @@ def create_set(elements):
 
 
 def compare_strings(tail, unsorted_string):
-    string = sorted(unsorted_string)
-    index = 0
-    diff = 0
+    """ Checks if {tail} ⊆ {unsorted_string}. """
+    string = sorted(unsorted_string)                    # prepares string for alphabetical comparison
+    index = 0                                           # current letter
+    diff = 0                                            # 
     while index < len (tail):
         if tail[index] != string[index + diff]:
             diff += 1
         else:
             index += 1
-        if diff > 1:
+        if diff >= 2:                                   # if diff >= 2, 2 more more letters have failed  
             return False
     return True
 
 
 
 def create_graph(elements):
+    """ Creates a graph of {elements}. If tail(u)⊆ v, an (u, v) is created. """ 
     graph = Graph()                                     # empty graph
     
     for word in elements:
@@ -58,7 +60,6 @@ def create_graph(elements):
     for word in elements:
         tail = word[1:]                                 # the tail (last 4 letters) of the word
         for neighbour in elements:
-            compare_strings(tail, neighbour)
             if compare_strings(tail, neighbour):        # if tail is a subset of neighbour...
                 if word != neighbour:                   # ... but not the same word as ...
                     graph.add_edge(word, neighbour)     # ... then add the edge
@@ -74,11 +75,12 @@ def BFS(start, goal, graph, token):
     elif start_node == goal_node:                       # early out, if same tail+head combination
         return 1
 
-    queue = [start_node]                                # queue <- first node
+    queue = collections.deque()
+    queue.append(start_node)                            # queue <- first node
     level = { start_node:0 }                            # level(first node) <- 0
 
     while queue:
-        v = queue.pop(0)
+        v = queue.popleft()
         neighbours = v.get_neighbours()                 # get all neighbours
         for n in neighbours:
             if not n.is_visited(token):                 # if neighbour not yet visited
