@@ -1,74 +1,55 @@
 class Vertex:
     def __init__ (self,node):
-        """Getting the id for the node and a adjacent 
-        dict to store it's neighbours"""
-        self.id = node
-        self.adjacent = []
-        self.token = -1
-        self.pred = []
+        self.id = node                       
+        self.adjacency_list = []            
+        self.token = 0                     
 
-    def get_connections(self):
-        return self.adjacent
+    def get_neighbours(self):           
+        """ Returns every neighbour of the node. """
+        return self.adjacency_list
 
     def print_connections(self):
-        connections = [x.id for x in self.adjacent]
-        print(self.id,' is connected to ', connections)
+        """ Prints every neighbour of the node. """
+        neighbours = [node.id for node in self.adjacency_list]
+        print(self.id,' is connected to ', neighbours)
 
-    def get_id(self):
-        return self.id
-    
-    def add_neighbor(self, neighbor):
-        self.adjacent.append(neighbor)
+    def add_neighbour(self, neighbour):
+        """ Connects a neighbour to the node. """ 
+        self.adjacency_list.append(neighbour)
         
     def is_visited(self, token):
+        """ Checks if token has been used for visiting the node. """
         return token <= self.token
 
     def set_visited(self, token):
+        """ Sets a new visit token. """
         self.token = token
     
-    def remove_visited(self):
-        self.token = -1
 
-    def add_pred(self, node):
-        self.pred.append(node)
-
-    def get_level(self):
-        return len(self.pred)
-
-    def clear_pred(self):
-        self.pred = []
 
 class Graph:
     def __init__(self):
-        self.vert_dict = {}
+        self.vertices = {}
         self.num_vertices = 0
 
+    def add_vertex(self, name):
+        """ Adds a new vertex to the graph. """
+        self.num_vertices += 1
+        self.vertices[name] = Vertex(name)
 
-    def add_vertex(self, node):
-        self.num_vertices = self.num_vertices + 1
-        new_vertex = Vertex(node)
-        self.vert_dict[node] = new_vertex
-        return new_vertex
-
-    def get_vertex(self, n):
-        if n in self.vert_dict:
-            return self.vert_dict[n]
+    def get_vertex(self, name):
+        """ Returns the vertex of id {name}, or None if {name} can't be found. """
+        if name in self.vertices:
+            return self.vertices[name]
         else:
             return None
 
     def add_edge(self, frm, to):
-        if frm not in self.vert_dict:
-            self.add_vertex(frm)
-        if to not in self.vert_dict:
-            self.add_vertex(to)
-
-        self.vert_dict[frm].add_neighbor(self.vert_dict[to])
+        """ Creates an edge between the nodes {frm} and {to}. """
+        self.vertices[frm].add_neighbour(self.vertices[to])
 
     def print_graph(self):
+        """ Prints the graph. """
         for node in self.vert_dict:
-            self.vert_dict[node].print_connections()        
-    
-    def get_vertices(self):
-        return self.vert_dict.keys()
-    
+            self.vert_dict[node].print_neightbours()        
     

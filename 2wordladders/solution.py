@@ -21,7 +21,7 @@ def get_data():
 
 
 
-def sort_letters(word):
+def sort_tail(word):
     return word[0] + ''.join(sorted(word[1:]))      # head + sorted(tail)
 
 
@@ -29,7 +29,7 @@ def sort_letters(word):
 def create_set(elements):
     element_set = set()                             # empty set
     for e in elements:
-        element_set.add(sort_letters(e))            # add every sorted element to set
+        element_set.add(sort_tail(e))            # add every sorted element to set
     return element_set
 
 
@@ -109,9 +109,6 @@ def create_graph(elements):
 #                return 1 + int(BFSrecursive(node, goal_node, node.get_connections()))
 #    return 200000
 #   
-def reset_visitors(visitors):
-    for node in visitors:
-        node.remove_visited()
 token = 0
     
 def BFS(start, goal, graph):
@@ -122,8 +119,8 @@ def BFS(start, goal, graph):
     if start == goal:                     # early out, if start = goal
         return 0
    
-    start_node = graph.get_vertex(sort_letters(start))            # start node
-    goal_node = graph.get_vertex(sort_letters(goal))              # goal node
+    start_node = graph.get_vertex(sort_tail(start))            # start node
+    goal_node = graph.get_vertex(sort_tail(goal))              # goal node
 
     if start_node == goal_node:
         return 1
@@ -138,7 +135,7 @@ def BFS(start, goal, graph):
 
         v = q.pop(0)
         #v.print_connections()
-        neighbours = v.get_connections()                #Get all neighbours
+        neighbours = v.get_neighbours()                #Get all neighbours
         for n in neighbours:
             if not n.is_visited(token):                        #if we havent checked it yet
                 n.set_visited(token)               
