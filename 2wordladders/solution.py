@@ -3,6 +3,7 @@ from graph import Vertex, Graph
 
 
 def get_data():
+    """ Returns the formatted data fetched from stdin. """
     raw_data = []                           
     for input in sys.stdin:
         raw_data.append(input.strip())              # import every line from system in
@@ -20,30 +21,20 @@ def get_data():
     return elements, queries                        # return graph elements and queries
 
 
-
 def sort_tail(word):
-    return word[0] + ''.join(sorted(word[1:]))      # head + sorted(tail)
-
+    """ Sorts the tail (every letter but the first) in alphabetical order. """
+    return word[0] + ''.join(sorted(word[1:]))  
 
 
 def create_set(elements):
-    element_set = set()                             # empty set
+    """ Creates a unique set of elements, elements with the same head+tail combination are ignored. """
+    element_set = set()                      
     for e in elements:
-        element_set.add(sort_tail(e))            # add every sorted element to set
+        element_set.add(sort_tail(e))       
     return element_set
 
 
-
 def compare_strings(tail, unsorted_string):
-    """
-    i = 1
-    while i < len(string):
-        if tail[i-1] != string[i]:
-            if tail[i-1] != string[0]:
-                return False
-        i += 1
-    return True
-    """
     string = sorted(unsorted_string)
     index = 0
     diff = 0
@@ -57,127 +48,68 @@ def compare_strings(tail, unsorted_string):
     return True
 
 
-"""
-    i = 0
-    fail = 0
-    while i + fail < len(string):
-        if tail[i] != string[i+fail]:
-            fail += 1
-        i += 1
-    return fail < 2
-"""
-
-
 
 def create_graph(elements):
-    graph = Graph()                                 # empty graph
+    graph = Graph()                                     # empty graph
     
     for word in elements:
-        graph.add_vertex(word)                      # create vertices for every word
+        graph.add_vertex(word)                          # create vertices for every word
 
     for word in elements:
-        tail = word[1:]                             # the tail (last 4 letters) of the word
+        tail = word[1:]                                 # the tail (last 4 letters) of the word
         for neighbour in elements:
             compare_strings(tail, neighbour)
-            #if list(tail) > list(neighbour):         # if tail is a subset of neighbour...
-            if compare_strings(tail, neighbour):         # if tail is a subset of neighbour...
-                if word != neighbour:               # ... but not the same word as ...
-                    graph.add_edge(word, neighbour) # ... then add the edge
-    
+            if compare_strings(tail, neighbour):        # if tail is a subset of neighbour...
+                if word != neighbour:                   # ... but not the same word as ...
+                    graph.add_edge(word, neighbour)     # ... then add the edge
     return graph
         
-#    
-#
-#def BFS2(start, goal, graph):
-#    start_node = graph.get_vertex(start)            # start node
-#    goal_node = graph.get_vertex(goal)              # goal node
-#    neighbours = start_node.get_connections()       # every neighbour of start node
-#
-#    if start_node == goal_node:
-#        return 0
-#
-#    return BFSrecursive(start_node, goal_node, neighbours)
-#
-#
-#def BFSrecursive(start_node, goal_node, nodes):
-#    if nodes:
-#        for node in nodes:
-#            if node == goal_node:
-#                return 1
-#            elif not node.is_visited():
-#                node.set_visited()
-#                return 1 + int(BFSrecursive(node, goal_node, node.get_connections()))
-#    return 200000
-#   
-token = 0
     
-def BFS(start, goal, graph):
-    
-    global token
-    token = token + 1
+def BFS(start, goal, graph, token):
+    start_node = graph.get_vertex(sort_tail(start))     # start node
+    goal_node = graph.get_vertex(sort_tail(goal))       # goal node
 
-    if start == goal:                     # early out, if start = goal
+    if start == goal:                                   # early out, if same node
         return 0
-   
-    start_node = graph.get_vertex(sort_tail(start))            # start node
-    goal_node = graph.get_vertex(sort_tail(goal))              # goal node
-
-    if start_node == goal_node:
+    elif start_node == goal_node:                       # early out, if same tail+head combination
         return 1
 
-    start_node.set_visited(token)                         #set the first node to true
-    q = [start_node]
-    #xvisited =[start_node]
-    layer_count= 1
-    level = {}
-    level[start_node] = 0
-    while q:
+    queue = [start_node]                                # queue <- first node
+    level = { start_node:0 }                            # level(first node) <- 0
 
-        v = q.pop(0)
-        #v.print_connections()
-        neighbours = v.get_neighbours()                #Get all neighbours
+    while queue:
+        v = queue.pop(0)
+        neighbours = v.get_neighbours()                 # get all neighbours
         for n in neighbours:
-            if not n.is_visited(token):                        #if we havent checked it yet
+            if not n.is_visited(token):                 # if neighbour not yet visited
                 n.set_visited(token)               
-                #visited.append(n)                          
-                q.append(n)
-                level[n] = level[v] +1
-                #n.add_pred(v)
+                queue.append(n)                         # add node n to queue 
+                level[n] = level[v] +1                  # increment level value
                 if n == goal_node:
-    #                print('Found path! Lenght: ',layer_count)    
-                    #reset_visitors(visited)             #reset the checks so that all nodes are unvisited                                 
-                    #return
-                    return level[n]
-
-
-        layer_count += 1
-    #reset_visitors(visited)                             #if it was impossible to find a path we still want to reset
-    return "Impossible" 
+                    return level[n]                     # goal found -> return level value
+    return "Impossible"                                 # goal not found -> return "Impossible"
 
 
 def print_results(results):
+    """ Prints the result. """
     for e in results:
         print(e)
 
 
 
 def main():                                     
-    elements, queries = get_data()                  # get data from standard input
-    elements_set = create_set(elements)             # create set of relevant elements
-    graph = create_graph(elements_set)              # create a graph
-    #graph = create_graph(elements)
-
-    #graph.print_graph()
+    elements, queries = get_data()                      # get data from standard input
+    elements_set = create_set(elements)                 # create set of relevant elements
+    graph = create_graph(elements_set)                  # create a graph of the elements from set
 
     results = []
+    token = 1                                           # initiate visit token to 1
     for query in queries:
-        start = query[0]              # start node converted to head + sorted(tail)
-        goal = query[1]               # goal node converted to head + sorted(tail)
-        #start = query[0]
-        #goal = query[1]
-        #print('Finding path from ',query[0],' to ',query[1])
-        results.append(BFS(start, goal, graph))     # BFS for every query in queries
+        start = query[0]                                # start node from query list
+        goal = query[1]                                 # goal noded from query list
+        results.append(BFS(start, goal, graph, token))  # BFS for every query in queries
+        token += 1                                      # increment token
 
-    print_results(results)                          # print results 
+    print_results(results)                              # print results 
 
 if __name__== "__main__": main()
