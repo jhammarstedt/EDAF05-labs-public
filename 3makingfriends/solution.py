@@ -6,9 +6,27 @@ Created on Wed Apr 15 19:31:38 2020
 """
 
 
-#import sys
 from graph import union,node
 import sys
+def get_local_data():
+    """ Returns the formatted data fetched from local. """
+         
+    #path = r"C:\Users\johan\Documents\GitHub\EDAF05-labs\3makingfriends\data\sample\1.in"
+    path= r"C:\Users\johan\Documents\GitHub\EDAF05-labs\3makingfriends\data\sample\1.in"
+    with open(path) as f:
+        raw_data= f.read().split("\n")
+    info = raw_data[0].split(' ')
+    people = int(info[0])
+    pairs = int(info[1])
+    
+    all_data = [[int(i) for i in x.split(' ')] for x in raw_data[1:]]
+    #print(all_data)
+    all_nodes= []
+    for i in range(0,people):                                       #init all nodes as empty sets O(n)
+        all_nodes.append(node(id=(i+1))) 
+    return all_data,people,pairs,all_nodes 
+
+
 def get_data():
     """ Returns the formatted data fetched from stdin. """
     raw_data = []                           
@@ -20,7 +38,7 @@ def get_data():
     pairs = int(info[1])
     
     all_data = [[int(i) for i in x.split(' ')] for x in raw_data[1:]]
-    print(all_data)
+    #print(all_data)
     all_data.sort(key=lambda x: x[2])                                                   #sorting the data according to weight
     all_nodes= []
     for i in range(0,people):                                                           #init all nodes as empty sets O(n)
@@ -32,6 +50,7 @@ def get_data():
 def krus(nodes,data):
     big_set = []
     edges = data.copy()
+    print(f'Edges going in {edges}')
     while len(edges) !=0:
         current_edge = edges.pop(0)                                                    #taking out the first edge
         start_node = nodes[current_edge[0]-1]                                          #for reference we take out the nodes as well
@@ -50,17 +69,19 @@ def krus(nodes,data):
 
 def get_cost(graph):
     total_cost= 0
-    for i in final_set:                                                                 #Getting the total cost for the optimal graph
+    for i in graph:                                                                 #Getting the total cost for the optimal graph
         total_cost+=i[2]
     return total_cost
 
 
 
+    
         
 def main():                                     
     data,people,pairs,nodes = get_data()
-    final_graph = krus(data,nodes)
+    final_graph = krus(data= data,nodes=nodes)
     final_cost = get_cost(final_graph)
+    print(f'Final graph {final_graph}')
     print(final_cost)
 if __name__== "__main__": main()
      
@@ -69,26 +90,8 @@ if __name__== "__main__": main()
 
 
 
-#%%
 """THIS SECTION CONTAINS NOT USED CODE"""
-def get__local_data():
-    """ Returns the formatted data fetched from local. """
-         
-    #path = r"C:\Users\johan\Documents\GitHub\EDAF05-labs\3makingfriends\data\sample\1.in"
-    path= r"C:\Users\johan\Documents\GitHub\EDAF05-labs\3makingfriends\data\secret\1small.in"
-    with open(path) as f:
-        raw_data= f.read().split("\n")
-    info = raw_data[0].split(' ')
-    people = int(info[0])
-    pairs = int(info[1])
-    
-    all_data = [[int(i) for i in x.split(' ')] for x in raw_data[1:]]
-    print(all_data)
-     all_nodes= []
-    for i in range(0,people):                                       #init all nodes as empty sets O(n)
-        all_nodes.append(node(id=(i+1))) 
-    return all_data,people,pairs,all_nodes 
-    
+
 #%%
 """This is just taken from his psudo code, not used"""
 def makeunionfind(S):
