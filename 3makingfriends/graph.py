@@ -4,9 +4,7 @@ Created on Wed Apr 15 21:00:31 2020
 
 @author: johan
 """
-def union(node1,node2):     #check if they are in the same set
-    #print(f'node1.set : {node1.set}')
-    #print(f'node2.set : {node2.set}')
+def union(node1,node2):             #check if they are in the same set
     if (node1.set == node2.set):    #If both None they are not in the same set
         return True
     else: 
@@ -14,19 +12,39 @@ def union(node1,node2):     #check if they are in the same set
 
 class node:
     def __init__(self,id):
-        self.point = None       #The edge its connected too       
-        self.set = id           #The set it points towards, first none= to itself
+        self.point = None       #The edge it's connected too -- Not used now, do we need it?      
+        self.set = id           #The set it points towards, first to itself, the set is the id of a node in that set
         self.setsize = 1        #The size of the set
         self.id = id            #Just for own reference
-    def addEdge(self,node2):
-        self.point = node2      # make it point towards the new node
+ 
         
     def merge(self,node2):
-        self.set = node2.set   # Merge this node into the other nodes set
-        node2.setsize +=1       # increment the setsize 
+        self.set = node2.set    # Merge this node into the other nodes set
+        node2.setsize +=1       # increment the setsize
+
+
+    def addEdge(self,node2):    #not used, needed?
+        self.point = node2      # make it point towards the new node
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         
 #%%        
-"""also from his psudo"""      
+"""also from his psudo, not used"""      
 class sets:
     def __init__(self,nodes):
         self.nodes= nodes                #Vertices
