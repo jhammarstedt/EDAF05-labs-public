@@ -4,6 +4,53 @@ Created on Wed Apr 15 21:00:31 2020
 
 @author: johan
 """
+
+
+class Graph:
+    def __init__(self):
+        self.edge_roots = {}
+
+    def find(self, node):
+        if node not in self.edge_roots:
+            self.edge_roots[node] = node
+        #self.edge_roots[node].setdefault(node)
+        selected_node = self.edge_roots[node]
+        #selected_node = self.edge_roots.get(node, node)
+        
+        #print(node, ":", selected_node)
+        if selected_node == node:
+            return node
+
+
+        #self.find(selected_node)
+            
+        self.edge_roots[node] = self.find(selected_node)
+        return self.edge_roots[node]
+
+    def union(self, edge):
+        #print(edge)
+
+        if edge[0] < edge[1]:
+            a = edge[0]
+            b = edge[1]
+        else:
+            a = edge[1]
+            b = edge[0]
+
+        if b in self.edge_roots:
+            #print("-------", b ,"---------")
+            self.edge_roots[self.find(b)] = self.find(a)
+            #print("print:", self.find(b))
+            #print("-------finish---------")
+        else:
+            self.edge_roots[b] = self.find(a)
+
+        self.edge_roots[a] = self.find(a)
+        
+
+       #print(self.edge_roots)
+               
+
 def union(node1,node2):             #check if they are in the same set
     if (node1.set == node2.set):    #If both None they are not in the same set
         return True
