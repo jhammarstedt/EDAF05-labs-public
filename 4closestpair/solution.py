@@ -29,7 +29,6 @@ def get_distance(p1,p2):
     return math.sqrt(math.pow(p1[0]-p2[0],2)+math.pow(p1[1]-p2[1],2))
 
 def closest(P_x, P_y, N):
-    #print(N)
     if N==1:
         return None
     elif N ==2:
@@ -45,12 +44,10 @@ def closest(P_x, P_y, N):
         
         L = closest(L_x, L_y, int(N/2))
         R = closest(R_x, R_y, int(N/2))
+        
         #Compute d as the minimum from these subproblems
         d = min(L, R)
        
-        
-        
-        
         #Get the rightmost element in L_x. Since it's sorted it will be the last element, then get that x-value
         x_star = L_x[-1][0]  
 
@@ -59,15 +56,11 @@ def closest(P_x, P_y, N):
         
         #Creating S = points in P wihtin distance d from L
         S = [point for point in P_x if abs(point[0]-x_star)<=d]
-        
-        
-        
+         
         #Create the set S_y from P_y
         S_y = sorted(S,key = lambda x: x[1])                        #sorting the elements in S by y cord
-        
-        
-        inner_minimum = 10**1000
-        
+                
+        inner_minimum = 10**1000        
         #check the 15 closest points for all points s in S.
         for count,point in enumerate(S_y):
             for inner_count in range(0,min(len(S_y),15)):           #if S_y contains less than 15 points
