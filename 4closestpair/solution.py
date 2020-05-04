@@ -1,6 +1,7 @@
 import sys
 import math
 
+
 def get_data():
     
     raw_data = []                           
@@ -56,11 +57,11 @@ def closest(P_x, P_y, N):
         
         #Creating S = points in P wihtin distance d from L
         S = [point for point in P_x if abs(point[0]-x_star)<=d]
-         
+        
         #Create the set S_y from P_y
         S_y = sorted(S,key = lambda x: x[1])                        #sorting the elements in S by y cord
                 
-        inner_minimum = 10**1000        
+        inner_minimum = 10**1000                                    #start it at a high value
         #check the 15 closest points for all points s in S.
         for count,point in enumerate(S_y):
             for inner_count in range(0,min(len(S_y),15)):           #if S_y contains less than 15 points
