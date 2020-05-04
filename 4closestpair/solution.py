@@ -1,6 +1,12 @@
 import sys
+import math
+def import_data():
+    N = 4
+    raw_data = [[0,-1],[-1,0],[0,1],[1,0]]
+    return raw_data
 
 def get_data():
+    
     raw_data = []                           
     for input in sys.stdin:
         # append every input line to raw_data
@@ -8,51 +14,99 @@ def get_data():
     
     # extract points (x, y) from raw_data
     points = [[int(i) for i in line.split(' ')] for line in raw_data[1:]]   
-
+    
     return points
 
 
 def closest_point(P):
-    P_x = []
-    P_y = []
+    P_x = P
+    P_y = P
 
     #Create two sorted arrays P_x and P_y.
-    for point in P:
-        P_x.append(P[0])
-        P_y.append(P[1])
+    P_x = sorted(P_x,key=lambda x:x[0])
+    P_y = sorted(P_y,key=lambda x:x[1])
 
+    
+    #print(f'P_x: {P_x}')
+    #print(f'P_y: {P_y}')
     return closest(P_x, P_y, len(P))
 
 def check_border(points, d):
     return d
 
+def get_distance(p1,p2):
+    """Get the distance between two points"""
+    return math.sqrt(math.pow(p1[0]-p2[0],2)+math.pow(p1[1]-p2[1],2))
+
 def closest(P_x, P_y, N):
-    #Divide P_x into two arrays L_x and R_x (left and right)
-    L_x = P_x[:N] 
-    R_x = P_x[N:]
-    #Divide P_y into two arrays L_y and R_y (left and right)
-    L_y = P_y[:N] 
-    R_y = P_y[N:]
+    #print(N)
+    if N==1:
+        #print('Only 1 point')
+        return None
+    elif N ==2:
+        #print('2 points only')
+        return get_distance(P_x[0],P_x[1])
+    elif N ==3:
+        #print('3 points')
+        return min(get_distance(P_x[0],P_x[1]),get_distance(P_x[0],P_x[2]),
+                   get_distance(P_x[1],P_x[2]))
+    else:
+        #Divide P_x into two arrays L_x and R_x (left and right)
+        L_x = P_x[:int(len(P_x)/2)]
+        R_x = P_x[int(len(P_x)/2):]
+        #print(L_x)
+        #print(R_x)
+        L_y,R_y = P_y[:int(len(P_x)/2)],P_y[int(len(P_x)/2):]
+        
+        L = closest(L_x, L_y, int(N/2))
+        R = closest(R_x, R_y, int(N/2))
+        #Compute d as the minimum from these subproblems
+        d = min(L, R)
+        #print('min dist: ',d)
+        
+        
+        
+        #Get the rightmost element in L_x. Since it's sorted it will be the last element, then get that x-value
+        x_star = L_x[-1][0]  
+
+        #Creating L         
+        L= [[x_star,y[1]] for y in L_y]
+        
+        #Creating S = points in P wihtin distance d from L
+        S = [point for point in P_x if abs(point[0]-x_star)<=d]
+        
+        #print(f'S:{S}')
+        
+        #Create the set S_y from P_y
+        S_y = sorted(S,key = lambda x: x[1])                        #sorting the elements in S by y cord
+        
+        #print(S_y)
+        inner_minimum = 10**1000
+        #check the 15 closest points for all points s in S.
+        for count,point in enumerate(S_y):
+            for inner_count in range(0,min(len(S_y),15)):           #if S_y contains less than 15 points
+                #print(f'count: {count} , inner: {inner_count}')
+                if count==inner_count:continue                      #don't compare same points
+                
+                #print(f'Comparing {point} and {S_y[inner_count]}')
+                inner_minimum= min(get_distance(point,S_y[inner_count]),inner_minimum)
+                
+                #print(f'min is: {inner_minimum}')
+                    
+        return min(inner_minimum,d)                                 #check which one is the smallest between delta and inner
+        
+        
+        #Check each point in S_y to see if any nearby point is closer than d
+        #d = check_border(S_y, d)
     
-    L = closest(L_x, L_y, int(N/2))
-    R = closest(R_x, R_y, int(N/2))
-
-    #Compute d as the minimum from these subproblems
-    d = min(L, R)
-
-    #Create the set S_y from P_y
-    S_y = set(P_y)
-
-    #Check each point in S_y to see if any nearby point is closer than d
-    d = check_border(S_y, d)
-
-    return d
+        #return d
 
 
 def main():              
     points = get_data()
+    #print(f'points are: {points}')
     distance = closest_point(points)
-    print(distance)
+    print(round(distance,6))
 
 if __name__== "__main__": main()
 
