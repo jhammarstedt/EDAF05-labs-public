@@ -1,9 +1,5 @@
 import sys
 import math
-def import_data():
-    N = 4
-    raw_data = [[0,-1],[-1,0],[0,1],[1,0]]
-    return raw_data
 
 def get_data():
     
@@ -26,9 +22,6 @@ def closest_point(P):
     P_x = sorted(P_x,key=lambda x:x[0])
     P_y = sorted(P_y,key=lambda x:x[1])
 
-    
-    #print(f'P_x: {P_x}')
-    #print(f'P_y: {P_y}')
     return closest(P_x, P_y, len(P))
 
 def check_border(points, d):
@@ -41,28 +34,23 @@ def get_distance(p1,p2):
 def closest(P_x, P_y, N):
     #print(N)
     if N==1:
-        #print('Only 1 point')
         return None
     elif N ==2:
-        #print('2 points only')
         return get_distance(P_x[0],P_x[1])
     elif N ==3:
-        #print('3 points')
         return min(get_distance(P_x[0],P_x[1]),get_distance(P_x[0],P_x[2]),
                    get_distance(P_x[1],P_x[2]))
     else:
         #Divide P_x into two arrays L_x and R_x (left and right)
-        L_x = P_x[:int(len(P_x)/2)]
-        R_x = P_x[int(len(P_x)/2):]
-        #print(L_x)
-        #print(R_x)
+        L_x,R_x = P_x[:int(len(P_x)/2)], P_x[int(len(P_x)/2):]
+       
         L_y,R_y = P_y[:int(len(P_x)/2)],P_y[int(len(P_x)/2):]
         
         L = closest(L_x, L_y, int(N/2))
         R = closest(R_x, R_y, int(N/2))
         #Compute d as the minimum from these subproblems
         d = min(L, R)
-        #print('min dist: ',d)
+       
         
         
         
@@ -75,31 +63,24 @@ def closest(P_x, P_y, N):
         #Creating S = points in P wihtin distance d from L
         S = [point for point in P_x if abs(point[0]-x_star)<=d]
         
-        #print(f'S:{S}')
+        
         
         #Create the set S_y from P_y
         S_y = sorted(S,key = lambda x: x[1])                        #sorting the elements in S by y cord
         
-        #print(S_y)
+        
         inner_minimum = 10**1000
+        
         #check the 15 closest points for all points s in S.
         for count,point in enumerate(S_y):
             for inner_count in range(0,min(len(S_y),15)):           #if S_y contains less than 15 points
-                #print(f'count: {count} , inner: {inner_count}')
                 if count==inner_count:continue                      #don't compare same points
                 
-                #print(f'Comparing {point} and {S_y[inner_count]}')
                 inner_minimum= min(get_distance(point,S_y[inner_count]),inner_minimum)
                 
-                #print(f'min is: {inner_minimum}')
-                    
+
         return min(inner_minimum,d)                                 #check which one is the smallest between delta and inner
         
-        
-        #Check each point in S_y to see if any nearby point is closer than d
-        #d = check_border(S_y, d)
-    
-        #return d
 
 
 def main():              
