@@ -24,9 +24,6 @@ def closest_point(P):
 
     return closest(P_x, P_y, len(P))
 
-def check_border(points, d):
-    return d
-
 def get_distance(p1,p2):
     """Get the distance between two points"""
     return math.sqrt(math.pow(p1[0]-p2[0],2)+math.pow(p1[1]-p2[1],2))
