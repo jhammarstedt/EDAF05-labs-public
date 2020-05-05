@@ -15,7 +15,7 @@ def get_data():
     return points
 
 
-def closest_point(P):
+def closest_point(P): #O(N logn)
     P_x = P
     P_y = P
 
@@ -59,11 +59,11 @@ def closest(P_x, P_y, N):
         S = [point for point in P_x if abs(point[0]-x_star)<=d]
         
         #Create the set S_y from P_y
-        S_y = sorted(S,key = lambda x: x[1])                        #sorting the elements in S by y cord
+        S_y = sorted(S,key = lambda x: x[1])                        #sorting the elements in S by y cord, O(N)
                 
         inner_minimum = 10**1000                                    #start it at a high value
         #check the 15 closest points for all points s in S.
-        for count,point in enumerate(S_y):
+        for count,point in enumerate(S_y):                          #O(15*N)
             for inner_count in range(0,min(len(S_y),15)):           #if S_y contains less than 15 points
                 if count==inner_count:continue                      #don't compare same points
                 
@@ -76,7 +76,6 @@ def closest(P_x, P_y, N):
 
 def main():              
     points = get_data()
-    #print(f'points are: {points}')
     distance = closest_point(points)
     print(round(distance,6))
 
