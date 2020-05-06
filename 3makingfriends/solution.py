@@ -41,5 +41,5 @@ def main():
     mst_edges = kruskal(data, n)                                            # O(n*log(n)[sort] + n[loop] + [find] ) = O(n*log(n))
     final_cost = get_cost(mst_edges)                                        # O(n-1), where n = number of nodes.
 
-if __name__== "__main__": main()
+if __name__== "__main__": main()                                            #Final complexity : O(n log(n))
 
