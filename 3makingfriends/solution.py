@@ -38,8 +38,8 @@ def print_cost(edges):
 
 def main():              
     data, n = init()                                                        # O(2*n + 3*n) = O(n), where n = number of lines.
-    mst_edges = kruskal(data, n)                                            # O(n*log(n)[sort] + n[loop] + [find] ) = O(n*log(n))
+    mst_edges = kruskal(data, n)                                            # O(n*log(n)[sort] + n[loop] + n[find]) = O(n*log(n))
     print_cost(mst_edges)                                                   # O(n-1), where n = number of nodes.
 
-if __name__== "__main__": main()                                            #Final complexity : O(n log(n))
+if __name__== "__main__": main()                                            #Final complexity : O(m log(n)), m = edges, n = nodes
 
