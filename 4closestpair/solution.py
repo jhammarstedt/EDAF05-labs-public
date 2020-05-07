@@ -77,7 +77,8 @@ def closest(P_x, P_y, N):
 def main():              
     points = get_data()
     distance = closest_point(points)
-    print(round(distance,6))
+    print(format(distance, '.6.f'))
+    #print(round(distance,6))
 
 if __name__== "__main__": main()
 
