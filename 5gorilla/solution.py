@@ -25,28 +25,34 @@ def match_all(costs, strings):
 
 
 ##################################
-
+def opt(i_s, j_t, costs):
+    
+    #costs.loc[s[i_s],t[j_t]]
+    
+    delta = -4
+    #if i == 0:  j = 0         
+    #if j == 0:  i = 0
+    if  j_t == 0:
+        return i_s*delta
+    if i_s == 0:
+        return j_t *delta
+   
+    return min(costs.loc[s[i_s],t[j_t]]+ opt(i-1, j-1),
+        delta + opt(i, j-1),
+        delta + opt(i-1, j))
 
 def seq_align(s, t):
-    global s
+    global s        #strings
     global t
     
+    
+        
+        
     ## på något sätt, jämför s och t
+    
+    
+ 
     return [s, t] #returnera modifierade s och t
-
-
-    def opt(i_s, j_t, costs):
-        #if i == 0:  j = 0         
-        #if j == 0:  i = 0        
-        delta = -4
-        
-        min(costs.loc[i_s,j_t]+ opt(i-1, j-1),
-            delta + opt(i, j-1),
-            delta + opt(i-1, j))
-        
-        
-        return min() #kostnad för alla alternativ
-
 
 
 ###################################
