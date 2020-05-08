@@ -15,7 +15,7 @@ def get_data():
     return points
 
 
-def closest_point(P): #O(N logn)
+def closest_point(P): #O(N log n)
     P_x = P
     P_y = P
 
@@ -31,7 +31,7 @@ def get_distance(p1,p2):
 
 def closest(P_x, P_y, N):
     if N==1:
-        return None
+        return 0                # no distance 
     elif N ==2:
         return get_distance(P_x[0],P_x[1])
     elif N ==3:
@@ -53,10 +53,10 @@ def closest(P_x, P_y, N):
         x_star = L_x[-1][0]  
 
         #Creating L         
-        L= [[x_star,y[1]] for y in L_y]
+        #L= [[x_star,y[1]] for y in L_y]
         
         #Creating S = points in P wihtin distance d from L
-        S = [point for point in P_x if abs(point[0]-x_star)<=d]
+        S = [point for point in P_x if abs(point[0]-x_star)<=d]     #O(NS)
         
         #Create the set S_y from P_y
         S_y = sorted(S,key = lambda x: x[1])                        #sorting the elements in S by y cord, O(N)
@@ -64,7 +64,7 @@ def closest(P_x, P_y, N):
         inner_minimum = 10**1000                                    #start it at a high value
         #check the 15 closest points for all points s in S.
         for count,point in enumerate(S_y):                          #O(15*len(S_y))
-            for inner_count in range(0,min(len(S_y),15)):           #if S_y contains less than 15 points, but this might be wrong since we're not checking the 15 points closest to this point 
+            for inner_count in range(count,min(len(S_y),15)):           #if S_y contains less than 15 points, but this might be wrong since we're not checking the 15 points closest to this point 
                 if count==inner_count:continue                      #don't compare point to itself
                 
                 inner_minimum= min(get_distance(point,S_y[inner_count]),inner_minimum)
@@ -77,8 +77,8 @@ def closest(P_x, P_y, N):
 def main():              
     points = get_data()
     distance = closest_point(points)
-    #print(format(distance, '.6.f'))
-    print(round(distance,6))
+    print(format(distance, '.6f'))
+    #print(round(distance,6))
 
 if __name__== "__main__": main()
 
