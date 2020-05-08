@@ -56,7 +56,7 @@ def closest(P_x, P_y, N):
         #L= [[x_star,y[1]] for y in L_y]
         
         #Creating S = points in P wihtin distance d from L
-        S = [point for point in P_x if abs(point[0]-x_star)<=d]     #O(NS)
+        S = [point for point in P_x if abs(point[0]-x_star)<=d]     #O(N)
         
         #Create the set S_y from P_y
         S_y = sorted(S,key = lambda x: x[1])                        #sorting the elements in S by y cord, O(N)
