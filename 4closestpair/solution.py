@@ -64,7 +64,7 @@ def closest(P_x, P_y, N):
         inner_minimum = 10**1000                                    #start it at a high value
         #check the 15 closest points for all points s in S.
         for count,point in enumerate(S_y):                          #O(15*len(S_y))
-            for inner_count in range(count+1,min(len(S_y),15)):       #if S_y contains less than 15 points O(15*log N) 
+            for inner_count in range(count+1,min(len(S_y),15+1)):       #if S_y contains less than 15 points O(15*log N) 
                 #if count==inner_count:continue                      #don't compare point to itself
                 
                 inner_minimum= min(get_distance(point,S_y[inner_count]),inner_minimum)
