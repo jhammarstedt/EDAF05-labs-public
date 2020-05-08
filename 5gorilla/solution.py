@@ -13,13 +13,14 @@ def get_data():
     strings = raw_data[len(letters)+1].split(' ')
     
     costs = pd.DataFrame(data=inputs,columns=letters,index=letters)
+    print(costs)
     return costs, strings
 
 
 def match_all(costs, strings):
-    results = []
+    results = [] 
     for string in strings:
-        results = seq_align(string[0], string[1])
+        results.append(seq_align(string[0], string[1]))
     return results
 
 
@@ -27,18 +28,23 @@ def match_all(costs, strings):
 
 
 def seq_align(s, t):
+    global s
+    global t
+    
     ## på något sätt, jämför s och t
     return [s, t] #returnera modifierade s och t
 
 
-    def opt(i, j, costs):
+    def opt(i_s, j_t, costs):
         #if i == 0:  j = 0         
         #if j == 0:  i = 0        
         delta = -4
-
-        min(costs(x_i,y_i) + opt(i-1, j-1),
-        delta + opt(i, j-1),
-        delta + opt(i-1, j))
+        
+        min(costs.loc[i_s,j_t]+ opt(i-1, j-1),
+            delta + opt(i, j-1),
+            delta + opt(i-1, j))
+        
+        
         return min() #kostnad för alla alternativ
 
 
