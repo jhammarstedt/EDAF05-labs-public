@@ -1,18 +1,19 @@
 import sys
-import numpy as np
 import pandas as pd
+import numpy as np
 
 def get_data():
-    raw_data = []                           
-    for input in sys.stdin:
-        # append every input line to raw_data
-        raw_data.append(input.strip())                                      
-
-
+    raw_data=[]
     
-    # costs som dataframe, strings som array [ord1, ord2]
+    for input in sys.stdin:
+        raw_data.append(input.strip())
+    
+    letters= raw_data.pop(0).split(' ')
+    inputs = [[int(x) for x in i.split(' ')] for i in raw_data[0:len(letters)]]
+    strings = raw_data[len(letters)+1].split(' ')
+    
+    costs = pd.DataFrame(data=inputs,columns=letters,index=letters)
     return costs, strings
-
 
 
 def match_all(costs, strings):
@@ -53,7 +54,9 @@ def print_results(results):
 def main():              
     costs, strings = get_data()
     results = match_all(costs, strings)
-    print_results(results)
+    #print_results(results)
+    #print_results([["AABC", "*ABC"], ["ABA", "ACA"]])
+    
 
 
 if __name__== "__main__": main()
