@@ -10,37 +10,57 @@ def get_data():
     
     letters= raw_data.pop(0).split(' ')
     inputs = [[int(x) for x in i.split(' ')] for i in raw_data[0:len(letters)]]
-    strings = raw_data[len(letters)+1].split(' ')
-    
+    #print(inputs)
+    strings = raw_data[len(letters)+1:] 
+    strings = [i.split(' ') for i in strings]
+    print(strings)
     costs = pd.DataFrame(data=inputs,columns=letters,index=letters)
+    
     return costs, strings
 
 
 def match_all(costs, strings):
-    results = []
+    results = [] 
     for string in strings:
-        results = seq_align(string[0], string[1])
+        results.append(seq_align(string[0], string[1],costs))
     return results
 
 
 ##################################
-
-
-def seq_align(s, t):
-    ## på något sätt, jämför s och t
-    return [s, t] #returnera modifierade s och t
-
-
-    def opt(i, j, costs):
-        #if i == 0:  j = 0         
-        #if j == 0:  i = 0        
-        delta = -4
-
-        min(costs(x_i,y_i) + opt(i-1, j-1),
+def opt(i_s, j_t, costs):
+    
+    #costs.loc[s[i_s],t[j_t]]
+    
+    delta = -4
+    #if i == 0:  j = 0         
+    #if j == 0:  i = 0
+    #print(s)
+    return 999
+    if  j_t == 0:
+        return i_s*delta
+    if i_s == 0:
+        return j_t *delta
+   
+    return min(costs.loc[s[i_s],t[j_t]]+ opt(i-1, j-1),
         delta + opt(i, j-1),
         delta + opt(i-1, j))
-        return min() #kostnad för alla alternativ
 
+def seq_align(word1, word2,costs):
+    #print(word1)
+    #print(word2)
+    global s
+    s = word1        #strings
+    global t 
+    t = word2
+    
+    opt(1,2,costs)
+        
+        
+    ## på något sätt, jämför s och t
+    
+    
+ 
+    return [s, t] #returnera modifierade s och t
 
 
 ###################################
@@ -53,6 +73,7 @@ def print_results(results):
 
 def main():              
     costs, strings = get_data()
+    #print(strings)
     results = match_all(costs, strings)
     #print_results(results)
     #print_results([["AABC", "*ABC"], ["ABA", "ACA"]])
