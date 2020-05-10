@@ -1,8 +1,6 @@
 import sys
 import pandas as pd
 import numpy as np
-#sys.setrecursionlimit(10000)
-
 
 
 def get_data():
@@ -32,12 +30,14 @@ def match_all(costs, strings):
 ##################################
 
 def traceback(s, t, matrix):
-    row, col = matrix.shape
-    word1 = ""
-    word2 = ""
-    row -=1
-    col -=1
-    print(matrix) 
+    print("col:",s)
+    print("row:",t)
+    print(matrix)
+#    row, col = matrix.shape
+#    word1 = ""
+#    word2 = ""
+#    row -=1
+#    col -=1
 #    while(row and col):
 #        #swap = matrix[row][col]
 #        #missing_s = matrix[row][col-1]
@@ -63,69 +63,46 @@ def traceback(s, t, matrix):
 #            row -= 1
 #    
 #    print(word1)
-    print(word2)
+#    print(word2)
+#
+#    
+#    if row == 0:
+#        word1 = col*'*'+word1
+#    if col == 0:
+#        word2 = col*'*'+word2
+#
+#
+#    print("word1:",word1 + " " + "word2:",word2)
 
-    
-    if row == 0:
-        word1 = col*'*'+word1
-    if col == 0:
-        word2 = col*'*'+word2
-
-
-    print("word1:",word1 + " " + "word2:",word2)
-
-    return word1 + " " + word2
+    return s + " " + t
 
 def seq_align(s, t, costs):
-    #print(word1)
-    #print(word2)
-#    global s
-#    s = word1        #strings
-#    global t 
-#    t = word2
-#    global costs
-#    costs = icosts
-#
-#
     cache = np.zeros((len(s), len(t)))
-    
 
-    def opt(index_s, index_t):#, word1, word2):
+    def opt(index_s, index_t):
         delta = -4
         if cache[index_s][index_t] != 0:
             return cache[index_s][index_t]
 
-        #if index_s == 0 and index_t == 0:
-        #    return 0, word1 + " " + word2
         if index_s < 0:
-            return (index_t+1) * delta#, "*"*index_t + word1 + " " + t[index_t-1] + word2
+            return (index_t+1) * delta
         if index_t < 0:
-            return (index_s+1) * delta#, s[index_s-1] + word1 + " " + "*"*index_s + word2
+            return (index_s+1) * delta
        
         letter_s = s[index_s]
         letter_t = t[index_t]
     
-        #cost_1, word_1 = opt(index_s-1, index_t-1, letter_s + word1, letter_t+word2)
-        #cost_2, word_2 = opt(index_s, index_t-1, '*'+word1, letter_t+ word2)
-        #cost_3, word_3 = opt(index_s-1, index_t, letter_s+word1, '*'+word2)
-        
-        #cost_1 += costs.loc[letter_s, letter_t]
-        #cost_2 += delta
-        #cost_3 += delta
-    
-        #cache[index_s][index_t] = max(cost_1, cost_2, cost_3)
-    
-        #if cache[index_s][index_t] == cost_1: return cache[index_s][index_t], word_1
-        #if cache[index_s][index_t] == cost_2: return cache[index_s][index_t], word_2
-        #if cache[index_s][index_t] == cost_3: return cache[index_s][index_t], word_3
-        cache[index_s, index_t] = max(costs.loc[letter_s, letter_t] + opt(index_s-1, index_t-1),
-                delta + opt(index_s, index_t-1),
-                delta + opt(index_s-1, index_t))
+        cache[index_s, index_t] = max(
+            opt(index_s-1, index_t-1) + costs.loc[letter_s, letter_t], 
+            opt(index_s, index_t-1) + delta,
+            opt(index_s-1, index_t) + delta
+        )
         return cache[index_s, index_t]
 
+    opt(len(s)-1, len(t)-1)
+    words = traceback(s, t, cache)
 
-    opt(len(s)-1, len(t)-1) #, "", "")[1]
-    return traceback(s, t, cache)
+    return words
 
 
 def print_results(results):
@@ -135,11 +112,8 @@ def print_results(results):
 
 def main():              
     costs, strings = get_data()
-    #print(strings)
     results = match_all(costs, strings)
     #print_results(results)
-    #print_results(["AABC *ABC", "ABA ACA"])
-    
 
 
 if __name__== "__main__": main()
