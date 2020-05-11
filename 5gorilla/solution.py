@@ -17,7 +17,7 @@ def get_data():
     strings = [i.split(' ') for i in strings]
     costs = pd.DataFrame(data=inputs,columns=letters,index=letters)
     costs = costs.to_dict()
-    print(costs)
+    #print(costs)
     return costs, strings
 
 
@@ -45,7 +45,7 @@ def traceback(s, t, matrix,costs):
         letter_s = s[row-1]
         letter_t = t[col-1]
 
-        move_diag = matrix[row][col] + costs.loc[letter_s, letter_t]
+        move_diag = matrix[row][col] + costs[letter_s][letter_t]#costs.loc[letter_s, letter_t]
         move_col = matrix[row][col-1] + delta
         move_row = matrix[row-1][col] + delta
 
