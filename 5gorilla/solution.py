@@ -16,7 +16,8 @@ def get_data():
     strings = raw_data[len(letters)+1:] 
     strings = [i.split(' ') for i in strings]
     costs = pd.DataFrame(data=inputs,columns=letters,index=letters)
-    
+    costs = costs.to_dict()
+    print(costs)
     return costs, strings
 
 
@@ -102,7 +103,7 @@ def seq_align(s, t, costs):
             while row < cache.shape[1]:
                 cache[0][row] = row * delta
                 if col and row:
-                    diag = cache[col-1][row-1] + costs.loc[s[col-1], t[row-1]]
+                    diag = cache[col-1][row-1] + costs[s[col-1]][t[row-1]]
                     prev_row = cache[col-1][row] + delta
                     prev_col = cache[col][row-1] + delta
 
