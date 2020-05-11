@@ -30,91 +30,42 @@ def match_all(costs, strings):
 
 ##################################
 
-def traceback(s, t, matrix):
-    print("col:",s)
-    print("row:",t)
-    print(matrix)
-
-    row, col = matrix.shape
-    print(col) #=s
-    print(row) #=t
-
+def traceback(s, t, matrix,costs):
+    row = matrix.shape[0] -1
+    col = matrix.shape[1] -1
+    delta = -4
     word_s = ""
     word_t = ""
+    #print(matrix)
+    while row >= 0 and col >= 0:
+        if row == 0 and col ==0:
+            break
+        #print("row:",row,"col:",col)
+        letter_s = s[row-1]
+        letter_t = t[col-1]
 
-    row -= 1
-    col -= 1
-    index = 0
-    while(row and col):
-        diag = matrix[row-1][col-1]
-        col_plus = matrix[row][col-1]
-        row_plus = matrix[row-1][col]
-        
-        comp = max(diag, col_plus, row_plus)
+        move_diag = matrix[row][col] + costs.loc[letter_s, letter_t]
+        move_col = matrix[row][col-1] + delta
+        move_row = matrix[row-1][col] + delta
 
-        if diag == comp:
-            word_s += s[len(s)-col-1]
-            word_t += t[len(t)-row-1]
+        move = max(move_diag, move_col, move_row)
+
+        if move_diag == move:
             row -= 1
             col -= 1
-        elif col_plus == comp:
-            word_s += s[len(s)-col-1]
-            word_t += '*'
+            word_s = letter_s + word_s
+            word_t = letter_t + word_t
+        elif move_col == move:
             #row -= 1
             col -= 1
+            word_t = letter_t + word_t
+            word_s = '*' + word_s
         else:
-            word_s += '*'
-            word_t += t[len(t)-row-1]
             row -= 1
+            word_t = '*' + word_t
+            word_s = letter_s + word_s
             #col -= 1
-        index += 1
 
-    if row == 0 and col == 0:
-        word_s += s[len(s)-col-1]
-        word_t += t[len(t)-row-1]
-
-    
-
-#    word1 = ""
-#    word2 = ""
-#    row -=1
-#    col -=1
-#    while(row and col):
-#        #swap = matrix[row][col]
-#        #missing_s = matrix[row][col-1]
-#        #missing_t = matrix[row-1][col]
-#        swap = matrix[row][col]
-#        missing_s = matrix[row][col-1]
-#        missing_t = matrix[row-1][col]
-#     
-#        temp = max(swap, missing_s, missing_t)
-#        print(temp)
-#        if swap == temp: 
-#            #word1 = s[row] + word1
-#            #word2 =t[col] + word2
-#            row -= 1
-#            col -= 1
-#        elif missing_s == temp:
-#            #word1 = "*" + word1
-#            #word2 = t[col] + word2
-#            col -= 1
-#        else:
-#            #word1= s[row] + word1
-#            #word2='*' + word2
-#            row -= 1
-#    
-#    print(word1)
-#    print(word2)
-#
-#    
-#    if row == 0:
-#        word1 = col*'*'+word1
-#    if col == 0:
-#        word2 = col*'*'+word2
-#
-#
-#    print("word1:",word1 + " " + "word2:",word2)
-    print("s:", word_s, "t:", word_t)
     return word_s + " " + word_t
 
 def seq_align(s, t, costs):
@@ -142,9 +93,6 @@ def seq_align(s, t, costs):
 #        return cache[index_s, index_t]
 #
 
-#    def opt(index_s, index_t):
-#        return 
-
     def make_table():
         col = 0
         delta = -4
@@ -163,12 +111,9 @@ def seq_align(s, t, costs):
             col += 1
 
 
-    #opt(len(s)-1, len(t)-1)
-    #words = traceback(s, t, cache)
-
     make_table()
-    print(cache)
-    return "hello world"
+    words = traceback(s, t, cache,costs)
+    return words
 
 
 def print_results(results):
@@ -179,8 +124,7 @@ def print_results(results):
 def main():              
     costs, strings = get_data()
     results = match_all(costs, strings)
-    #print_results(results)
-
+    print_results(results)
 
 if __name__== "__main__": main()
 
