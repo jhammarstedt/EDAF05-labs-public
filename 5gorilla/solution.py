@@ -63,7 +63,7 @@ def traceback(s, t, matrix,costs):
 
         move = max(move_diag, move_col, move_row)
 
-        if move_diag == move: #Choose how to prio the order of change, if they are the same
+        if move_diag == move: 
             row -= 1
             col -= 1
             word_s = letter_s + word_s  # swap
