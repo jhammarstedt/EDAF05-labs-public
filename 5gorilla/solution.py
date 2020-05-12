@@ -1,6 +1,6 @@
 import sys
-import pandas as pd
-import numpy as np
+#import pandas as pd
+#import numpy as np
 sys.setrecursionlimit(3500)
 
 
@@ -11,12 +11,19 @@ def get_data():
         raw_data.append(input.strip())
     
     letters= raw_data.pop(0).split(' ')
-    inputs = [[int(x) for x in i.split(' ')] for i in raw_data[0:len(letters)]]
+    inputs = [[int(x) for x in i.split(' ')] for i in raw_data[0:len(letters)]] #O(alf^2) :afl = words in alfab
 
     strings = raw_data[len(letters)+1:] 
-    strings = [i.split(' ') for i in strings]
-    costs = pd.DataFrame(data=inputs,columns=letters,index=letters)
-    costs = costs.to_dict()
+    strings = [i.split(' ') for i in strings]   
+
+    #costs = pd.DataFrame(data=inputs,columns=letters,index=letters)
+    
+    costs = {letter: {letter:0 for letter in letters } for letter in letters}
+    for letter1,numbers in zip(costs.keys(),inputs):
+        for letter2,number2 in zip(costs[letter1].keys(),numbers) :
+            costs[letter1][letter2]= number2
+    
+    #costs = costs.to_dict()
     #print(costs)
     return costs, strings
 
@@ -32,8 +39,13 @@ def match_all(costs, strings):
 ##################################
 
 def traceback(s, t, matrix,costs):
-    row = matrix.shape[0] -1
-    col = matrix.shape[1] -1
+
+    row = len(matrix) -1
+    #row = matrix.shape[0] -1
+
+    col = len(matrix[0]) -1
+    #col = matrix.shape[1] -1
+    
     delta = -4
     word_s = ""
     word_t = ""
@@ -51,16 +63,16 @@ def traceback(s, t, matrix,costs):
 
         move = max(move_diag, move_col, move_row)
 
-        if move_diag == move:
+        if move_diag == move: #Choose how to prio the order of change, if they are the same
             row -= 1
             col -= 1
-            word_s = letter_s + word_s
+            word_s = letter_s + word_s  # swap
             word_t = letter_t + word_t
         elif move_col == move:
             #row -= 1
             col -= 1
-            word_t = letter_t + word_t
-            word_s = '*' + word_s
+            word_t = letter_t + word_t  
+            word_s = '*' + word_s # C
         else:
             row -= 1
             word_t = '*' + word_t
@@ -70,37 +82,15 @@ def traceback(s, t, matrix,costs):
     return word_s + " " + word_t
 
 def seq_align(s, t, costs):
-    cache = np.zeros((len(s)+1, len(t)+1), dtype="int")
-
-#    def opt(index_s, index_t):
-#        delta = -4
-#
-#        if index_s < 0:
-#            return (index_t+1) * delta
-#        if index_t < 0:
-#            return (index_s+1) * delta
-#
-#        if cache[index_s][index_t] != 0:
-#            return cache[index_s][index_t]
-#
-#        letter_s = s[index_s]
-#        letter_t = t[index_t]
-#    
-#        cache[index_s, index_t] = max(
-#            opt(index_s-1, index_t-1) + costs.loc[letter_s, letter_t], 
-#            opt(index_s, index_t-1) + delta,
-#            opt(index_s-1, index_t) + delta
-#        )
-#        return cache[index_s, index_t]
-#
-
+    #cache = np.zeros((len(s)+1, len(t)+1), dtype="int")
+    cache = [[0 for i in range(0,len(t)+1)] for k in range(0,len(s)+1)]
     def make_table():
         col = 0
         delta = -4
-        while col < cache.shape[0]:
+        while col < len(cache): #cache.shape[0]:
             cache[col][0] = col * delta
             row = 0
-            while row < cache.shape[1]:
+            while row < len(cache[0]): #cache.shape[1]:
                 cache[0][row] = row * delta
                 if col and row:
                     diag = cache[col-1][row-1] + costs[s[col-1]][t[row-1]]
