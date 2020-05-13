@@ -14,7 +14,7 @@ def get_data():
 
     costs = {letter: {letter:0 for letter in letters } for letter in letters}
     for letter1,numbers in zip(costs.keys(),inputs):
-        for letter2,number2 in zip(costs[letter1].keys(),numbers) :
+        for letter2,number2 in zip(costs[letter1].keys(),numbers):
             costs[letter1][letter2]= number2
     
     return costs, strings
@@ -31,16 +31,15 @@ def match_all(costs, strings):
 
 
 def seq_align(s, t, costs):
-    #cache = np.zeros((len(s)+1, len(t)+1), dtype="int")
-    cache = [[0 for i in range(0,len(t)+1)] for k in range(0,len(s)+1)]
+    cache = [([0] * (len(t)+1)) for k in range(len(s)+1)]
 
     def make_table():
         col = 0
         delta = -4
-        while col < len(cache): #cache.shape[0]:
+        while col < len(cache): 
             cache[col][0] = col * delta
             row = 0
-            while row < len(cache[0]): #cache.shape[1]:
+            while row < len(cache[0]): 
                 cache[0][row] = row * delta
                 if col and row:
                     diag = cache[col-1][row-1] + costs[s[col-1]][t[row-1]]
@@ -56,11 +55,11 @@ def seq_align(s, t, costs):
         row = len(s)
         col = len(t) 
         delta = -4
-        
         word_s = word_t = ""
     
         move_diag = 1
         move_col = move_row = 0
+
         while row and col:
             move = max(move_diag, move_col, move_row)
     
@@ -70,35 +69,29 @@ def seq_align(s, t, costs):
                 row -= 1
                 col -= 1
             elif move_col == move:
-                word_t = t[col-1] + word_t
                 word_s = '*' + word_s
+                word_t = t[col-1] + word_t
                 col -= 1
             elif move_row == move:
-                word_t = '*' + word_t
                 word_s = s[row-1] + word_s
+                word_t = '*' + word_t
                 row -= 1
             
-            if not col or not row:
-                move_diag = -sys.maxsize 
-            else:
-                move_diag = cache[row-1][col-1] + costs[s[row-1]][t[col-1]]#costs.loc[letter_s, letter_t]
-    
+            move_diag = cache[row-1][col-1] + costs[s[row-1]][t[col-1]]
             move_col = cache[row][col-1] + delta
             move_row = cache[row-1][col] + delta
     
         if row and not col:
-            word_s = s[row-1] + word_s
+            word_s = s[0] + word_s
             word_t = '*'+ word_t
-            row -= 1
         if col and not row:
             word_s = '*'+ word_s
-            word_t = t[col-1] + word_t
-            col -= 1
+            word_t = t[0] + word_t
     
         return word_s + " " + word_t
+
     make_table()
-    words = traceback()
-    return words
+    return traceback()
 
 
 def print_results(results):
