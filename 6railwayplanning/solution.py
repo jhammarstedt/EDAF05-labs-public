@@ -28,10 +28,11 @@ def create_graph(attrib,nodes):
     g.print_graph()
 
 def push_ready(high_node,low_node):
+    """This is on the residual graph"""
     residual_graf =' '
     if (high_node.exessive_flow > 0) and (high_node.height > low_node.height) and ((high_node and low_node) in residual_graf): #implementera
         return True 
-    else: return False
+    if check_forward_edge()
     
 
 def push(preflow,height,node_v,node_w):
