@@ -43,7 +43,7 @@ def traceback(s, t, matrix,costs):
     col = len(t) 
     delta = -4
     
-    word_s = word_t = " "
+    word_s = word_t = ""
 
     move_diag = 1
     move_col = move_row = 0
@@ -92,7 +92,7 @@ def traceback(s, t, matrix,costs):
             print("hello")
         
         if not col or not row:
-            move_diag = -10
+            move_diag = -1000000
         else:
             move_diag = matrix[row-1][col-1] + costs[s[row-1]][t[col-1]]#costs.loc[letter_s, letter_t]
         move_col = matrix[row][col-1] + delta
@@ -100,12 +100,12 @@ def traceback(s, t, matrix,costs):
 
     if row and not col:
     
-        word_s = s[row] + word_s
+        word_s = s[row-1] + word_s
         word_t = '*'+ word_t
         #print("row")
     if col and not row:
 #    while row >= 0 and col >= 0:
-        word_t = t[col] + word_t
+        word_t = t[col-1] + word_t
         word_s = '*'+ word_s
 #        if row == 0 and col ==0:
 #            break
