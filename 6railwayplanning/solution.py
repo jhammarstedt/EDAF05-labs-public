@@ -10,7 +10,6 @@ def get_data():
     nr_nodes = info[0]
     nodes = [[int(i) for i in k.split(' ')] for k in raw_data[0:nr_nodes]]
     removal = [int(i) for i in raw_data[nr_nodes:]]
-    print(removal)
     
     return info,nodes,removal
 
