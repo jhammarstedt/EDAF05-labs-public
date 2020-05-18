@@ -59,34 +59,36 @@ def seq_align(s, t, costs):
     
         move_diag = 1
         move_col = move_row = 0
-
         while row and col:
             move = max(move_diag, move_col, move_row)
-    
             if move_diag == move: 
                 word_s = s[row-1] + word_s
                 word_t = t[col-1] + word_t
                 row -= 1
                 col -= 1
-            elif move_col == move:
-                word_s = '*' + word_s
-                word_t = t[col-1] + word_t
-                col -= 1
             elif move_row == move:
                 word_s = s[row-1] + word_s
                 word_t = '*' + word_t
                 row -= 1
+            elif move_col == move:
+                word_s = '*' + word_s
+                word_t = t[col-1] + word_t
+                col -= 1
             
             move_diag = cache[row-1][col-1] + costs[s[row-1]][t[col-1]]
-            move_col = cache[row][col-1] + delta
             move_row = cache[row-1][col] + delta
+            move_col = cache[row][col-1] + delta
     
         if row and not col:
-            word_s = s[0] + word_s
-            word_t = '*'+ word_t
+            while row:
+                word_s = s[row-1] + word_s
+                word_t = '*'+ word_t
+                row -= 1
         if col and not row:
-            word_s = '*'+ word_s
-            word_t = t[0] + word_t
+            while col:
+                word_s = '*'+ word_s
+                word_t = t[col-1] + word_t
+                col -= 1
     
         return word_s + " " + word_t
 
@@ -97,7 +99,6 @@ def seq_align(s, t, costs):
 def print_results(results):
     for result in results:
         print(result)
-
 
 def main():              
     costs, strings = get_data()
