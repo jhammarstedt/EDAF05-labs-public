@@ -33,7 +33,8 @@ class Edge:
         self.capacity= capacity             
         self.flow = 0                   #e
         self.cnode= to_node             #the other node which it is connected to 
-
+    def update_flow(new_flow):
+        self.flow = new_flow
 
 class Graph:
     def __init__(self):
