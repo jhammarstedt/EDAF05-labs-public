@@ -65,7 +65,10 @@ class Graph:
         """ Prints the graph. """
         for node in self.nodes:
             self.nodes[node].print_edges()        
-    
+
+class Residual_graph(Graph):
+      def __init__(self):
+          super().__init__() #gets all the attributes from G
 
 
 def old_extra_for_reference():

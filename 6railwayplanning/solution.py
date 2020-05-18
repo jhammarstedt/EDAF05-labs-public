@@ -25,7 +25,8 @@ def create_graph(attrib,nodes):
         g.add_edge(frm=i[1],to=i[0],capacity=i[2]) 
     g.print_graph()
     e =g.nodes[0].get_edges()
-    print(e[1].cnode.is_visited())
+    return g
+    #print(e[1].cnode.is_visited())
 
 def BFS(start, goal, graph, token):
     start_node = graph.get_node(start)
@@ -52,7 +53,16 @@ def BFS(start, goal, graph, token):
                 if edge.cnode == goal_node:
                     return level[edge.cnode.id]                     # goal found -> return level value
     return "Impossible"                                 # goal not found -> return "Impossible"
+def ford_fulkersson(start,stop,graph,token):
 
+    #For each edge in edges set flow to 0, this is done when graph is created
+    g_res = Residual_graph()
+    path = BFS(start=start,goal=goal,graph=g_res,token=??) #inte helt säker på vad vi ska göra med token här
+    while path != "Impossible":
+        
+
+    
+    #print(g_res)
 
 def main():
     info,nodes,removal=get_data()
@@ -60,7 +70,8 @@ def main():
     print(nodes)
     print(removal)
     graph = create_graph(info,nodes)
-
+    ford_fulkersson(start=graph.nodes[0],stop=graph.nodes[2],graph=graph) #change to correct stop later
+    #x = BFS(nodes[0])
 if __name__=='__main__': main()
 
 
