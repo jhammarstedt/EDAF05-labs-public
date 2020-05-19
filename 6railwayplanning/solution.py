@@ -31,8 +31,9 @@ def create_graph(nodes, edge_list):
 
     # connects every edge
     for index, edge in enumerate(edge_list):
-        graph.add_edge(edge_id=index, frm=edge[0], to=edge[1], capacity=edge[2]) 
-        graph.add_edge(edge_id=len(edge_list)+index, frm=edge[1], to=edge[0], capacity=edge[2]) 
+        i = index+1
+        graph.add_edge(edge_id=i, frm=edge[0], to=edge[1], capacity=edge[2]) 
+        graph.add_edge(edge_id=-i, frm=edge[1], to=edge[0], capacity=edge[2]) 
 
     return graph
 
@@ -55,6 +56,7 @@ def BFS(graph):
             #print("stuck i for-each edge")
             if edge.id not in visited and edge.is_available():
                 visited[edge.id] = True
+                visited[-edge.id] = True
                 queue.append(edge.cnode)  
                 parent[edge.cnode.id] = { "node": v.id, "edge": edge.id }  
                 if edge.cnode == graph.get_sink():
@@ -118,11 +120,9 @@ def ford_fulkerson(graph):
         ff_set_flow(graph, min_flow, edges)
         ff_create_residual_edges(graph, min_flow, nodes)
 
-
+        
         path = BFS(graph)
-#        print(path)
     graph.reset_edges()
-    print("end of ff")
     return min_flow 
 
 
@@ -135,19 +135,10 @@ def remove_edges(graph, remove_list, threshold):
     while remove_edges:
         flow = ford_fulkerson(graph)
         if flow >= threshold:
-
-            print("graph1")
-            graph.print_weights()
-            print("/graph1")
-
-            graph.disabled_edge(edges_removed)
             edges_removed += 1
+            graph.disabled_edge(edges_removed)
+            graph.disabled_edge(-edges_removed)
             max_flow = flow
-
-            print("graph2")
-            graph.print_weights()
-            print("/graph2")
-
         else:
             remove_edges = False
 
