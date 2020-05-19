@@ -32,6 +32,7 @@ def create_graph(nodes, edge_list):
     # connects every edge
     for index, edge in enumerate(edge_list):
         graph.add_edge(edge_id=index, frm=edge[0], to=edge[1], capacity=edge[2]) 
+        graph.add_edge(edge_id=-index, frm=edge[1], to=edge[0], capacity=edge[2]) 
 
     return graph
 
@@ -42,18 +43,20 @@ def BFS(graph):
 
     queue = deque()
     queue.append(source_node)          
-    parent = { source_node.id: None }   
+    parent = {}   
     visited = {}
+
+    #print("stuck i bfs")
     while queue:
+        #print("stuck i while queue")
         v = queue.popleft()
         neighbours = v.get_edges()       
         for edge in neighbours:
+            #print("stuck i for-each edge")
             if edge.id not in visited and edge.is_available():
                 visited[edge.id] = True
                 queue.append(edge.cnode)  
                 parent[edge.cnode.id] = { "node": v.id, "edge": edge.id }  
-                #print(v.id)
-                #print(edge.cnode.is_sink())
                 if edge.cnode == graph.get_sink():
                     return parent
     return [] 
@@ -62,15 +65,16 @@ def BFS(graph):
 
 def ff_parse_bfs(graph, path):
     sink_id = graph.get_sink().id
+    source_id = graph.get_source().id
     node_id = sink_id
     nodes = []
     edges = []
-
-    while node_id != 0:
+    while node_id != source_id:
+        #print("hittar inte hem :(")
         edge_id = path[node_id]["edge"]
         nodes.append(node_id)
         edges.append(edge_id)
-        node_id = path[node_id]["node"]
+        node_id = path[node_id]["node"] 
     nodes.append(0)
     return nodes, edges
 
@@ -78,22 +82,24 @@ def ff_parse_bfs(graph, path):
 def ff_find_min_flow(graph, edges):
     min_delta = sys.maxsize
     for edge_id in edges:
-        edge = graph.get_edge(edge_id)
-        min_delta = min(min_delta, edge.capacity - edge.flow)
+        edge = graph.get_edge_by_id(edge_id)
+        min_delta = min(min_delta, edge.is_available())
     return min_delta
 
 
 def ff_set_flow(graph, min_delta, edges):
     for edge_id in edges:
-        graph.get_edge(edge_id).set_flow(min_delta)
+        graph.get_edge_by_id(edge_id).add_flow(min_delta)
 
 def ff_create_residual_edges(graph, min_delta, nodes):
     edges = []
+
+    node_index = graph.get_edge_count()
     for index in range(len(nodes)-1):
-        u = index
-        v = index + 1
-        node = graph.add_edge(edge_id=sys.maxsize, frm=u, to=v, capacity=min_delta)
-        edges.append(node)
+        u = nodes[index] 
+        v = nodes[index + 1]
+        edge = graph.get_edge_by_node(u,v)
+        edge.add_flow(-min_delta)
     return edges
 
 def ff_reset_graph(graph, residual_edges):
@@ -108,14 +114,16 @@ def ford_fulkerson(graph):
     min_flow = 0
 
     while path:
+        #print(path)
         nodes, edges = ff_parse_bfs(graph, path)
 
         min_flow = ff_find_min_flow(graph, edges)
+        # optimering med min_flow,  2^k något.
         ff_set_flow(graph, min_flow, edges)
         residual_edges = ff_create_residual_edges(graph, min_flow, nodes)
 
         path = BFS(graph)
-
+        print(path)
     ff_reset_graph(graph, residual_edges)
     return min_flow 
 

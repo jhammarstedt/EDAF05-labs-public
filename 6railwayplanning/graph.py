@@ -18,15 +18,16 @@ class Graph:
 
     def add_edge(self, edge_id, frm, to, capacity):
         """ Creates an edge between the nodes {frm} and {to}. """
-        new_node = self.nodes[frm].add_edge(edge_id=edge_id, to_node=self.nodes[to], capacity=capacity)
-        self.all_edges[edge_id] = new_node
-        return new_node
+        new_edge = self.nodes[frm].add_edge(edge_id=edge_id, to_node=self.nodes[to], capacity=capacity)
+        self.all_edges[edge_id] = new_edge
+        return new_edge
 
-    def get_edge(self,frm,to):
+    def get_edge_by_node(self,frm,to):
         """Get edge from node to another"""
-        return self.nodes[frm].edges[to]
+        #print("from:",frm,"nodes:",self.nodes.edge_map)
+        return self.nodes[frm].edge_map[to]
 
-    def get_edge(self, edge_id):
+    def get_edge_by_id(self, edge_id):
         return self.all_edges[edge_id]
 
     def print_graph(self):
@@ -52,12 +53,15 @@ class Graph:
     def reset_edges(self):
         for edge_id in self.all_edges:
             self.all_edges[edge_id].set_flow(0)
-
+    
+    def get_edge_count(self):
+        return len(self.all_edges)
 
 class Node:
     def __init__ (self,node):
         self.id = node
-        self.edges = []                   
+        self.edges = [] 
+        self.edge_map = {}
 
     def get_edges(self):           
         """ Returns every neighbour of the node. """
@@ -65,13 +69,14 @@ class Node:
 
     def print_edges(self):
         """ Prints every neighbour of the node. """
-        neigh = [[self.edges[neighbour].cnode.id, self.edges[neighbour].capacity] for neighbour in self.edges.keys()]
+        neigh = [edge.cnode.id for edge in self.edges]
+        #neigh = [[self.edges[neighbour].cnode.id, self.edges[neighbour].capacity] for neighbour in self.edges.keys()]
         print(self.id, 'is connected to', neigh)
 
     def add_edge(self, edge_id, to_node, capacity):
         """ Connects a neighbour to the node with an edge. """ 
         new_edge = Edge(edge_id=edge_id, to_node=to_node,capacity=capacity)
-        #self.edges[to_node.id] = new_edge
+        self.edge_map[to_node.id] = new_edge
         self.edges.append(new_edge)
         return new_edge
 
@@ -100,6 +105,9 @@ class Edge:
 
     def set_flow(self, new_flow):
         self.flow = new_flow
+
+    def add_flow(self, new_flow):
+        self.flow += new_flow
 
     def get_flow(self):
         return self.flow
