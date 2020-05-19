@@ -1,8 +1,63 @@
+class Graph:
+    def __init__(self):
+        self.nodes = {}
+        self.all_edges = {}
+        self.source_node = None
+        self.sink_node = None
+
+    def add_node(self, name):
+        """ Adds a new node to the graph. """
+        self.nodes[name] = Node(name)
+
+    def get_node(self, name):
+        """ Returns the node of id {name}, or None if {name} can't be found. """
+        if name in self.nodes:
+            return self.nodes[name]
+        else:
+            return None
+
+    def add_edge(self, edge_id, frm, to, capacity):
+        """ Creates an edge between the nodes {frm} and {to}. """
+        new_node = self.nodes[frm].add_edge(edge_id=edge_id, to_node=self.nodes[to], capacity=capacity)
+        self.all_edges[edge_id] = new_node
+        return new_node
+
+    def get_edge(self,frm,to):
+        """Get edge from node to another"""
+        return self.nodes[frm].edges[to]
+
+    def get_edge(self, edge_id):
+        return self.all_edges[edge_id]
+
+    def print_graph(self):
+        """ Prints the graph. """
+        for node in self.nodes:
+            self.nodes[node].print_edges()        
+
+    def select_source(self, node_id):
+        self.source_node = self.nodes[node_id]
+
+    def get_source(self):
+        return self.source_node
+
+    def select_sink(self, node_id):
+        self.sink_node = self.nodes[node_id]
+
+    def get_sink(self):
+        return self.sink_node
+
+    def disabled_edge(self, edge_id):
+        self.all_edges[edge_id].disable()
+
+    def reset_edges(self):
+        for edge_id in self.all_edges:
+            self.all_edges[edge_id].set_flow(0)
+
+
 class Node:
     def __init__ (self,node):
-        self.id = node                                 
-        self.token = 0  
-        self.edges= {}                   
+        self.id = node
+        self.edges = []                   
 
     def get_edges(self):           
         """ Returns every neighbour of the node. """
@@ -10,116 +65,49 @@ class Node:
 
     def print_edges(self):
         """ Prints every neighbour of the node. """
-        #print(self.edges[1].cnode.id)
-        neigh = [[self.edges[neighbour].cnode.id,self.edges[neighbour].capacity] for neighbour in self.edges.keys()]
-        #neighbours = [åedge.cnode.id,edge.capacity] for edge in self.edges.keys]
-        print(self.id,' is connected to ', neigh)
+        neigh = [[self.edges[neighbour].cnode.id, self.edges[neighbour].capacity] for neighbour in self.edges.keys()]
+        print(self.id, 'is connected to', neigh)
 
-    def add_edge(self,to_node,capacity):
+    def add_edge(self, edge_id, to_node, capacity):
         """ Connects a neighbour to the node with an edge. """ 
-        self.edges[to_node.id]=Edge(to_node=to_node,capacity=capacity)
-        
-    def is_visited(self, token):
-        """ Checks if token has been used for visiting the node. """
-        return token <= self.token
+        new_edge = Edge(edge_id=edge_id, to_node=to_node,capacity=capacity)
+        #self.edges[to_node.id] = new_edge
+        self.edges.append(new_edge)
+        return new_edge
 
-    def set_visited(self, token):
-        """ Sets a new visit token. """
-        self.token = token
+    #def is_visited(self, token):
+    #    """ Checks if token has been used for visiting the node. """
+    #    return token <= self.token
+
+    #def set_visited(self, token):
+    #    """ Sets a new visit token. """
+    #    self.token = token
     
+
 class Edge:
     """Edges are connected through nodes and accessed from each nodes by a dict of edges"""
-    def __init__(self,to_node,capacity):
-        self.capacity= capacity             
+    def __init__(self, edge_id, to_node, capacity):
+        self.id = edge_id
+        self.capacity = capacity             
         self.flow = 0                   #e
         self.cnode= to_node             #the other node which it is connected to 
-    def update_flow(new_flow):
+   
+    def disable(self):
+        self.capacity = 0
+
+    def get_capacity(self):
+        return self.capacity
+
+    def set_flow(self, new_flow):
         self.flow = new_flow
 
-class Graph:
-    def __init__(self):
-        self.nodes = {}
-        self.num_nodes = 0
-
-    def add_node(self, name):
-        """ Adds a new vertex to the graph. """
-        self.num_nodes += 1
-        self.nodes[name] = Node(name)
-
-    def get_node(self, name):
-        """ Returns the vertex of id {name}, or None if {name} can't be found. """
-        if name in self.nodes:
-            return self.nodes[name]
-        else:
-            return None
-
-    def add_edge(self, frm, to,capacity):
-        """ Creates an edge between the nodes {frm} and {to}. """
-        self.nodes[frm].add_edge(to_node =self.nodes[to],capacity=capacity)
-
-    def get_edge(self,frm,to):
-        """Get edge from node to another"""
-        #ed = self.nodes[frm].edges[to]
-        #print(f'Getting edge from {self.nodes[frm].id} to {self.nodes[to].id} with capacity {ed.capacity}')
-        return self.nodes[frm].edges[to]
-    def print_graph(self):
-        """ Prints the graph. """
-        for node in self.nodes:
-            self.nodes[node].print_edges()        
-
-class Residual_graph(Graph):
-      def __init__(self):
-          super().__init__() #gets all the attributes from G
-
-
-def old_extra_for_reference():
-    class Node:
-        def __init__ (self,node,height=0):
-            self.id = node                       
-            #self.connections = []
-            self.height = height                             
-            self.edges = {}
-        def get_neighbours(self):           
-            """ Returns every neighbour of the node. """
-            return self.edges
-
-        def print_connections(self):
-            """ Prints every neighbour of the node. """
-            neighbours = [[node[0].id,node[1]] for node in self.edges] #print each node with it's capacity
-            print(self.id,' is connected to [x with capacity y]', neighbours)
-
-        def add_connection(self, neighbour,capacity):
-            """ Connects a neighbour to the node. So you can get this node by nodes[0].edges[neighbour] """
-            self.edges[neighbour.id] = Edge(to_node=neighbour,capacity=capacity)
-            #self.edges.append([neighbour,capacity])
+    def get_flow(self):
+        return self.flow
     
-        
+    def is_available(self):
+        return self.capacity - self.flow
 
+#class Residual_graph(Graph):
+#      def __init__(self):
+#          super().__init__() #gets all the attributes from G
 
-    class Graph:
-        def __init__(self):
-            self.nodes = {}
-            self.num_nodes = 0
-
-        def add_node(self, name):
-            """ Adds a new vertex to the graph. """
-            self.num_nodes += 1
-            self.nodes[name] = Node(name)
-
-        def get_node(self, name):
-            """ Returns the vertex of id {name}, or None if {name} can't be found. """
-            if name in self.nodes:
-                return self.nodes[name]
-            else:
-                return None
-
-        def add_edge(self, node1, node2,capacity):
-            """ Creates an edge between the nodes {node1} and {node1} with given capacity. """
-            self.nodes[node1].add_connection(self.nodes[node2],capacity)
-            self.nodes[node2].add_connection(self.nodes[node1],capacity) #creating it twice for now since it's undirected
-            
-        def print_graph(self):
-            """ Prints the graph. """
-            for node in self.nodes:
-                self.nodes[node].print_connections()        
-        
