@@ -16,6 +16,14 @@ class Graph:
         else:
             return None
 
+    def print_weights(self):
+        for node in self.nodes:
+            for edge in self.nodes[node].edges:
+                flow = edge.flow
+                cap = edge.capacity
+                print("node:",node,"to",edge.cnode.id,"edge_id",edge.id,"flow:",flow,"cap:",cap)
+
+
     def add_edge(self, edge_id, frm, to, capacity):
         """ Creates an edge between the nodes {frm} and {to}. """
         new_edge = self.nodes[frm].add_edge(edge_id=edge_id, to_node=self.nodes[to], capacity=capacity)

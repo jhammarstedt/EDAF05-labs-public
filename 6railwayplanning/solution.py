@@ -32,7 +32,7 @@ def create_graph(nodes, edge_list):
     # connects every edge
     for index, edge in enumerate(edge_list):
         graph.add_edge(edge_id=index, frm=edge[0], to=edge[1], capacity=edge[2]) 
-        graph.add_edge(edge_id=-index, frm=edge[1], to=edge[0], capacity=edge[2]) 
+        graph.add_edge(edge_id=len(edge_list)+index, frm=edge[1], to=edge[0], capacity=edge[2]) 
 
     return graph
 
@@ -99,13 +99,10 @@ def ff_create_residual_edges(graph, min_delta, nodes):
         u = nodes[index] 
         v = nodes[index + 1]
         edge = graph.get_edge_by_node(u,v)
+        if not edge:
+            print("error")
         edge.add_flow(-min_delta)
     return edges
-
-def ff_reset_graph(graph, residual_edges):
-    graph.reset_edges()
-    for edge in residual_edges:
-        edge.disable() 
 
 
 def ford_fulkerson(graph):
@@ -114,17 +111,18 @@ def ford_fulkerson(graph):
     min_flow = 0
 
     while path:
-        #print(path)
         nodes, edges = ff_parse_bfs(graph, path)
 
         min_flow = ff_find_min_flow(graph, edges)
         # optimering med min_flow,  2^k något.
         ff_set_flow(graph, min_flow, edges)
-        residual_edges = ff_create_residual_edges(graph, min_flow, nodes)
+        ff_create_residual_edges(graph, min_flow, nodes)
+
 
         path = BFS(graph)
-        print(path)
-    ff_reset_graph(graph, residual_edges)
+#        print(path)
+    graph.reset_edges()
+    print("end of ff")
     return min_flow 
 
 
@@ -136,11 +134,20 @@ def remove_edges(graph, remove_list, threshold):
 
     while remove_edges:
         flow = ford_fulkerson(graph)
-
         if flow >= threshold:
+
+            print("graph1")
+            graph.print_weights()
+            print("/graph1")
+
             graph.disabled_edge(edges_removed)
             edges_removed += 1
             max_flow = flow
+
+            print("graph2")
+            graph.print_weights()
+            print("/graph2")
+
         else:
             remove_edges = False
 
