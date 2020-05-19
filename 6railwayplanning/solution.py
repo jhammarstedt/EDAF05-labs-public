@@ -147,6 +147,7 @@ def main():
 
     graph = create_graph(nodes, edge_list)
     result = remove_edges(graph, remove_list, min_students)
+    print(result)
 
 if __name__=='__main__': main()
 
