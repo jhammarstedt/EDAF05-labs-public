@@ -117,7 +117,7 @@ def ford_fulkerson(graph):
 
 def remove_edges(graph, remove_list, threshold):
     edges_removed = 0
-    flow = threshold
+    flow = 0
     max_flow = 0
     first_list = remove_list
     second_list = remove_list
@@ -156,5 +156,4 @@ def main():
     result = remove_edges(graph, remove_list, min_students)
     print(result)
 
-if __name__=='__main__': main()
-
+if __name__ == "__main__": main()

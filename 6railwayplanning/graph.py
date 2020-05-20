@@ -127,11 +127,14 @@ class Edge:
     def get_flow(self):
         return self.flow
     
-    def is_available(self,bn_cap=None):
-        if bn_cap==None:
-            return self.capacity - self.flow
-        elif bn_cap <= self.capacity - self.flow:
-            return True
-        else:
-            return False
+    def is_available(self):
+        return self.capacity - self.flow
+
+    #def is_available(self,bn_cap=None):
+    #    if bn_cap==None:
+    #        return self.capacity - self.flow
+    #    elif bn_cap <= self.capacity - self.flow:
+    #        return True
+    #    else:
+    #        return False
 
