@@ -1,4 +1,5 @@
 import sys
+import time
 from graph import Graph
 from collections import deque
 
@@ -13,7 +14,7 @@ def get_data():
     nr_edges = metadata[1]
     nr_routes = metadata[3]
     edges = [[int(i) for i in k.split(' ')] for k in raw_data[:nr_edges]]
-    remove_list = [int(i) for i in raw_data[nr_routes:]]
+    remove_list = [int(i) for i in raw_data[nr_edges:]]
     
     return metadata, edges, remove_list
 
@@ -47,16 +48,12 @@ def BFS(graph):
     parent = {}   
     visited = {}
 
-    #print("stuck i bfs")
     while queue:
-        #print("stuck i while queue")
         v = queue.popleft()
         neighbours = v.get_edges()       
         for edge in neighbours:
-            #print("stuck i for-each edge")
-            if edge.id not in visited and edge.is_available():
-                visited[edge.id] = True
-                visited[-edge.id] = True
+            if edge.cnode.id not in visited and edge.is_available():
+                visited[edge.cnode.id] = True
                 queue.append(edge.cnode)  
                 parent[edge.cnode.id] = { "node": v.id, "edge": edge.id }  
                 if edge.cnode == graph.get_sink():
@@ -72,7 +69,6 @@ def ff_parse_bfs(graph, path):
     nodes = []
     edges = []
     while node_id != source_id:
-        #print("hittar inte hem :(")
         edge_id = path[node_id]["edge"]
         nodes.append(node_id)
         edges.append(edge_id)
@@ -89,46 +85,41 @@ def ff_find_min_flow(graph, edges):
     return min_delta
 
 
-def ff_set_flow(graph, min_delta, edges):
+def ff_set_flow(graph, min_delta, edges, nodes):
+    # forward edge
     for edge_id in edges:
         graph.get_edge_by_id(edge_id).add_flow(min_delta)
 
-def ff_create_residual_edges(graph, min_delta, nodes):
-    edges = []
-
+    # back edge
     node_index = graph.get_edge_count()
     for index in range(len(nodes)-1):
         u = nodes[index] 
         v = nodes[index + 1]
         edge = graph.get_edge_by_node(u,v)
-        if not edge:
-            print("error")
         edge.add_flow(-min_delta)
-    return edges
 
 
 def ford_fulkerson(graph):
     path = BFS(graph)
-    residual_edges = []
     min_flow = 0
-
+    delta = 0
     while path:
         nodes, edges = ff_parse_bfs(graph, path)
 
         min_flow = ff_find_min_flow(graph, edges)
         # optimering med min_flow,  2^k något.
-        ff_set_flow(graph, min_flow, edges)
-        ff_create_residual_edges(graph, min_flow, nodes)
-
+        ff_set_flow(graph, min_flow, edges, nodes)
+        delta += min_flow
         
+        timer = time.time()
         path = BFS(graph)
     graph.reset_edges()
-    return min_flow 
+    return delta 
 
 
 
 def remove_edges(graph, remove_list, threshold):
-    edges_removed = 0
+    edges_removed = -1
     max_flow = 0
     remove_edges = True
 
@@ -136,12 +127,12 @@ def remove_edges(graph, remove_list, threshold):
         flow = ford_fulkerson(graph)
         if flow >= threshold:
             edges_removed += 1
-            graph.disabled_edge(edges_removed)
-            graph.disabled_edge(-edges_removed)
+            next_edge = remove_list[edges_removed]
+            graph.disabled_edge(next_edge+1)
+            graph.disabled_edge(-(next_edge+1))
             max_flow = flow
         else:
             remove_edges = False
-
     return str(edges_removed) + " " + str(max_flow)
 
 
@@ -156,34 +147,4 @@ def main():
     print(result)
 
 if __name__=='__main__': main()
-
-
-
-
-
-
-def ford_fulkersson(start,stop,graph,token):
-
-    #For each edge in edges set flow to 0, this is done when graph is created
-    g_res = Residual_graph()
-     #inte helt säker på vad vi ska göra med token här och hur vi ska spara path
-     #implementerar den som att vi hade skapat en lista med noder p = [0,1,2] då kan vi gå mellan nod 0-1-2
-    flag = True #set starting points
-    while flag:
-        #path = BFS(start=start,goal=goal,graph=g_res,token=??) 
-        while path != "Impossible":
-            delta = 10*100
-            edges = []
-            residual_edges = []
-            for current in path[:-1]:                                              # All elements except the final node
-                current_edge = graph[nodes][current].edges[path[current+1]]        #current +1 will be the next node, givnig us the correct path
-                potential_inc = current_edge.capacity - current_edge.flow
-                delta = min(delta,potential_inc)                                   #find the bottleneck
-                
-                edges.append(current_edge)
-                residual_edges.append(g_res[nodes][current].edges[path[current+1]])       
-            
-            for current in edges:
-                edges[current].update_flow(delta)                                   #updating G
-                
 
