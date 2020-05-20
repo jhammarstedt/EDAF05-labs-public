@@ -55,8 +55,11 @@ class Graph:
     def get_sink(self):
         return self.sink_node
 
-    def disabled_edge(self, edge_id):
+    def disable_edge(self, edge_id):
         self.all_edges[edge_id].disable()
+
+    def enable_edge(self, edge_id):
+        self.all_edges[edge_id].enable()
 
     def reset_edges(self):
         for edge_id in self.all_edges:
@@ -104,9 +107,13 @@ class Edge:
         self.capacity = capacity             
         self.flow = 0                   #e
         self.cnode= to_node             #the other node which it is connected to 
+        self.cache = capacity
    
     def disable(self):
         self.capacity = 0
+
+    def enable(self):
+        self.capacity = self.cache
 
     def get_capacity(self):
         return self.capacity
@@ -122,8 +129,4 @@ class Edge:
     
     def is_available(self):
         return self.capacity - self.flow
-
-#class Residual_graph(Graph):
-#      def __init__(self):
-#          super().__init__() #gets all the attributes from G
 

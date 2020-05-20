@@ -1,5 +1,4 @@
 import sys
-import time
 from graph import Graph
 from collections import deque
 
@@ -35,7 +34,6 @@ def create_graph(nodes, edge_list):
         i = index+1
         graph.add_edge(edge_id=i, frm=edge[0], to=edge[1], capacity=edge[2]) 
         graph.add_edge(edge_id=-i, frm=edge[1], to=edge[0], capacity=edge[2]) 
-
     return graph
 
 
@@ -99,6 +97,7 @@ def ff_set_flow(graph, min_delta, edges, nodes):
         edge.add_flow(-min_delta)
 
 
+
 def ford_fulkerson(graph):
     path = BFS(graph)
     min_flow = 0
@@ -107,11 +106,9 @@ def ford_fulkerson(graph):
         nodes, edges = ff_parse_bfs(graph, path)
 
         min_flow = ff_find_min_flow(graph, edges)
-        # optimering med min_flow,  2^k något.
         ff_set_flow(graph, min_flow, edges, nodes)
         delta += min_flow
         
-        timer = time.time()
         path = BFS(graph)
     graph.reset_edges()
     return delta 
@@ -119,20 +116,33 @@ def ford_fulkerson(graph):
 
 
 def remove_edges(graph, remove_list, threshold):
-    edges_removed = -1
+    edges_removed = 0
+    flow = threshold
     max_flow = 0
-    remove_edges = True
+    first_list = remove_list
+    second_list = remove_list
 
-    while remove_edges:
+    while first_list and second_list:
         flow = ford_fulkerson(graph)
         if flow >= threshold:
-            edges_removed += 1
-            next_edge = remove_list[edges_removed]
-            graph.disabled_edge(next_edge+1)
-            graph.disabled_edge(-(next_edge+1))
             max_flow = flow
+            half = len(second_list) // 2
+            first_list = second_list[:half]
+            second_list = second_list[half:]
+            for index in first_list:
+                graph.disable_edge(index+1)
+                graph.disable_edge(-(index+1))
+            edges_removed += len(first_list)
+        
         else:
-            remove_edges = False
+            half = len(first_list) // 2
+            second_list = first_list[half:]
+            first_list = first_list[:half]
+            for index in second_list:
+                graph.enable_edge(index+1)
+                graph.enable_edge(-(index+1))
+            edges_removed -= len(second_list)
+        
     return str(edges_removed) + " " + str(max_flow)
 
 
